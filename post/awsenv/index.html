@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>awsenv - MrGossett</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <meta name="keywords" content="">
+  <link rel="canonical" href="https://mrgossett.github.io/post/awsenv/">
+
+  
+  
+  <link rel="stylesheet" type="text/css" href="https://mrgossett.github.io/css/basscss.css">
+  <link rel="stylesheet" type="text/css" href="https://mrgossett.github.io/css/main.css">
+
+  
+  
+  <link rel="stylesheet" type="text/css" href="https://mrgossett.github.io/css/highlight/styles/xcode.css">
+
+  
+  
+  <link rel='stylesheet' type='text/css' href='//fonts.googleapis.com/css?family=Ubuntu:400,700,400italic,700italic&subset=latin,cyrillic-ext,cyrillic'>
+  <link rel='stylesheet' type='text/css' href='//fonts.googleapis.com/css?family=Lato:900,300'>
+
+  
+
+</head>
+<body class="">
+
+<div class="site-wrap">
+  <header class="site-header px2 px-responsive">
+  <div class="mt2 wrap">
+    <div class="measure">
+      <a href="https://mrgossett.github.io/" class="site-title">
+      	MrGossett
+      	
+      </a>
+      <nav class="site-nav right">
+      <a href="https://mrgossett.github.io/tags">Tags</a>
+
+
+      </nav>
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</header>
+
+  <div class="post p2 p-responsive wrap" role="main">
+    <div class="measure">
+      <div class="post-header mb2">
+        <h1 class="py2">awsenv</h1>
+        <span class="post-meta">Mar 8, 2015 by Tim Gossett</span><br>
+        
+      </div>
+
+      <article class="post-content">
+      
+
+<h2 id="tl-dr:aa84e39f58c872cf409a237a95d5e6fd">TL;DR</h2>
+
+<p>I have this cool <code>awsenv</code> function. <a href="#tldr">Check it out</a></p>
+
+<p><em>Full disclosure: the <code>awsenv</code> function in this post is based on a <code>zsh</code> script my co-worker <a href="https://github.com/phemmer">phemmer</a> wrote. I ported it to <code>bash</code>.</em></p>
+
+<h2 id="why:aa84e39f58c872cf409a237a95d5e6fd">Why?</h2>
+
+<p>I deal with a few different AWS accounts in the course of a day. We use separate accounts at work for our development and production deploys, and I also have a personal account to kick around.</p>
+
+<p>AWS has a nice suite of command-line utilities, but there&rsquo;s one aspect that I don&rsquo;t agree with: credential management. Suffice it to say that it&rsquo;s not easy to switch between AWS accounts using the provided CLIs. Fortunately, the AWS CLIs can make use of credentials set as environment variables, and environment variables can be swapped rather easily.</p>
+
+<h2 id="the-credentials:aa84e39f58c872cf409a237a95d5e6fd">The Credentials</h2>
+
+<p>The end goal is a function (we&rsquo;ll call it <code>awsenv</code>) that will set a number of environment variables associated with my label for the AWS account I was to use, and drop me in a subshell.</p>
+
+<p>We&rsquo;ll start off by declaring two associative arrays, one for the keypairs and another for the regions.</p>
+
+<pre><code class="language-bash">declare -A keypairs regions
+</code></pre>
+
+<p>It would be best to keep the secret information in a separate file. I tend to put things like this in <code>~/.secrets</code>. Also, it would be convenient if we can just source that file, and it will fill in the associative arrays for us.</p>
+
+<pre><code class="language-bash">source ~/.secrets/aws
+</code></pre>
+
+<p>The content of that file looks something like this:</p>
+
+<pre><code class="language-bash"># ~/.secrets/aws
+
+keypairs[mine]='AKIA... &lt;shh-its-a-secret&gt;'
+regions[mine]='us-west-2'
+
+keypairs[dev]='AKIA... &lt;shh-its-a-secret&gt;'
+regions[dev]='us-east-1'
+
+keypairs[prod]='AKIA... &lt;shh-its-a-secret&gt;'
+regions[prod]='us-west-1'
+</code></pre>
+
+<p>So now <code>keypairs</code> and <code>regions</code> are ready to go.</p>
+
+<h2 id="usage:aa84e39f58c872cf409a237a95d5e6fd">Usage</h2>
+
+<p>It&rsquo;s not uncommon for me to temporarily forget how to use something I wrote. It&rsquo;s good practice to respond to unexpected or invalid input with some usage tips, just to help the user out. Let&rsquo;s handle that first.</p>
+
+<p>There are two conditions to check that indicate the user needs some help. The first is that no arguments were passed at all, which we check with <code>[[ -z &quot;$1&quot; ]]</code>. This evaluates to true if the first argument passed to the function (<code>$1</code>) is zero-length. The second condition is that the user passed an invalid account label, which we check with <code>[[ -z &quot;${keypairs[$1]}&quot; ]]</code>. This fetches the value associated with the key (<code>&quot;${keypairs[$1]}&quot;</code>), and tests if that value is zero-length, which indicates that the key (<code>$1</code>) is not a valid account label.</p>
+
+<p>So far we have this:</p>
+
+<pre><code class="language-bash">if [[ -z &quot;$1&quot; ]] || [[ -z &quot;${keypairs[$1]}&quot; ]]; then
+</code></pre>
+
+<p>Then what? Let&rsquo;s help out the user by printing a list of account labels. We&rsquo;ll start by printing a header:</p>
+
+<pre><code class="language-bash">printf 'Environments:\n'
+</code></pre>
+
+<p>Then we&rsquo;ll loop through the keys of the <code>keypairs</code> array (using <code>&quot;${!keypairs[@]}&quot;</code> to get the list of keys), printing each key as we go.</p>
+
+<pre><code class="language-bash">for name in &quot;${!keypairs[@]}&quot;; do
+	printf '  %s\n' &quot;$name&quot;
+done
+</code></pre>
+
+<p>Here&rsquo;s what that look like on my machine:</p>
+
+<pre><code class="language-sh">$ awsenv
+Environments:
+  mine
+  dev
+  prod
+</code></pre>
+
+<h2 id="creating-an-environment:aa84e39f58c872cf409a237a95d5e6fd">Creating an Environment</h2>
+
+<p>Now to the meaty part. The user has given us a valid account label, so we need to fetch the values for that label and set environment variables accordingly.</p>
+
+<p>First off, let&rsquo;s get those credentials. We&rsquo;ll set a local variable with the content of <code>${keypairs[$1]}</code>, which will be a list of strings. This will save some repition later on.</p>
+
+<pre><code class="language-bash">creds=(${keypairs[$1]})
+</code></pre>
+
+<p>Now let&rsquo;s set environment variables that the AWS CLIs will use for credentials.</p>
+
+<pre><code class="language-bash">export AWS_ACCESS_KEY=&quot;${creds[0]}&quot;
+export AWS_ACCESS_KEY_ID=&quot;$AWS_ACCESS_KEY&quot;
+export AWS_SECRET_KEY=&quot;${creds[1]}&quot;
+export AWS_SECRET_ACCESS_KEY=&quot;$AWS_SECRET_KEY&quot;
+</code></pre>
+
+<p>Some CLIs use the contents of a credential file, the path to which should be set in <code>AWS_CREDENTIAL_FILE</code>. First, let&rsquo;s just set the environment variable with the path to a file we&rsquo;ll create later:</p>
+
+<pre><code class="language-bash">export AWS_CREDENTIAL_FILE=&quot;/tmp/.$USER-$1.awskey&quot;
+</code></pre>
+
+<p>On my machine, that variable ends up looking like this:</p>
+
+<pre><code class="language-sh">$ echo $AWS_CREDENTIAL_FILE
+/tmp/.tim-dev.awskey
+</code></pre>
+
+<p>Now let&rsquo;s create that file and allow only the user to read and write to it. If there are any issues setting the permissions on the file, bail out with an exit code of <code>1</code> to indicate an error.</p>
+
+<pre><code class="language-bash">touch &quot;$AWS_CREDENTIAL_FILE&quot;
+chmod 0600 &quot;$AWS_CREDENTIAL_FILE&quot; || return 1
+</code></pre>
+
+<p>Now to write the contents of the file. The access key should be on one line prefixed with <code>AWSAccessKeyId=</code>, and the secret should be on another line prefixed with <code>AWSSecretKey=</code>. We can handle this with one command:</p>
+
+<pre><code class="language-bash">printf 'AWSAccessKeyId=%s\nAWSSecretKey=%s\n' &quot;$AWS_ACCESS_KEY&quot; &quot;$AWS_SECRET_KEY&quot; &gt; &quot;$AWS_CREDENTIAL_FILE&quot;
+</code></pre>
+
+<p>That will interpolate <code>$AWS_ACCESS_KEY</code> and <code>$AWS_SECRET_KEY</code> into their respective <code>%s</code> placeholders, and write the result to the path specified by <code>AWS_CREDENTIAL_FILE</code>, truncating any content that already exists in the file.</p>
+
+<p>Now let&rsquo;s check if the label the user gave us has an associated region. <code>[[ -n &quot;${regions[$1]}&quot; ]]</code> will attempt to fetch the value from the <code>regions</code> array using our label (<code>$1</code>) as the key. If the result is not null (tested with <code>-n</code>), the condition evaluates to true and we&rsquo;re clear to <code>export AWS_DEFAULT_REGION=&quot;${regions[$1]}&quot;</code>.</p>
+
+<pre><code class="language-bash">if [[ -n &quot;${regions[$1]}&quot; ]]; then
+	export AWS_DEFAULT_REGION=&quot;${regions[$1]}&quot;
+fi
+</code></pre>
+
+<h2 id="the-subshell:aa84e39f58c872cf409a237a95d5e6fd">The Subshell</h2>
+
+<p>Now that we have an environment configured for the correct AWS account, we need to drop the user in a subshell to run some commands with that account.</p>
+
+<p>For sanity, I track subshells with the <code>SHELLSTACK</code> environment variable. I&rsquo;ve added that variable to my prompt so that I can quickly see how many levels deep I am, and if <a href="http://en.wikipedia.org/wiki/Inception">the top is still spinning</a>. Since we&rsquo;re about to drop the user down another level, let&rsquo;s append our label to <code>SHELLSTACK</code>.</p>
+
+<pre><code class="language-bash">export SHELLSTACK=&quot;$SHELLSTACK aws:$1&quot;
+</code></pre>
+
+<p>At this point we&rsquo;re done with the label, which has heretofore occupied <code>$1</code>. Let&rsquo;s <code>shift</code> and be done with it; any following arguments will &ldquo;shift&rdquo; up a space, occupying the void left at <code>$1</code> and following.</p>
+
+<pre><code class="language-bash">shift
+</code></pre>
+
+<h4 id="now-for-a-neat-trick:aa84e39f58c872cf409a237a95d5e6fd">Now for a neat trick.</h4>
+
+<p>A majority of my use of <code>ssh</code> is in the form <code>ssh &lt;host&gt;</code>, where I want to start a secure shell session on the remote host. Once the session is established, <code>ssh</code> drops me in a shell on the other end.</p>
+
+<p>However, I really like (and sometimes use) the form <code>ssh &lt;host&gt; &lt;command&gt;</code>, which establishes a secure connection to the remote host, executes the command, and then terminates the connection. This saves me from having to wait for a shell before I can execute the command, and then exit the shell when it&rsquo;s done.</p>
+
+<p>We can get the same effect with <code>awsenv</code>. At this point, <code>shift</code> has thrown aside the account label that the user passed. If any arguments remain, then the user has given us a command to run. If no argument remain, then the user is looking for a shell.</p>
+
+<p><code>$#</code> will give us the count of arguments (having been modified by <code>shift</code> earlier). If that count is <code>&gt;= 1</code>, then we have a command to run, which we can execute with <code>exec &quot;$@&quot;</code>. Otherwise, just need a shell, which we can get with <code>exec &quot;$SHELL&quot;</code> (<code>SHELL</code> being something like <code>/bin/bash</code>).</p>
+
+<pre><code class="language-bash">if (( $# &gt;= 1 )); then
+	exec &quot;$@&quot;
+else
+	exec &quot;$SHELL&quot;
+fi
+</code></pre>
+
+<p>Lastly, to make all this happen in a subshell, we need to wrap parens around everything from <code>creds=(${keypairs[$1]})</code> to the <code>fi</code> after <code>exec &quot;$SHELL&quot;</code>.</p>
+
+<h2 id="put-it-all-together:aa84e39f58c872cf409a237a95d5e6fd">Put it all together</h2>
+
+<p><a name="tldr"></a>Here&rsquo;s the complete function in all its glory:</p>
+
+<pre><code class="language-bash"># ~/.awsrc
+
+function awsenv() {
+	declare -A keypairs regions
+	source ~/.secrets/aws
+
+	if [[ -z &quot;$1&quot; ]] || [[ -z &quot;${keypairs[$1]}&quot; ]]; then
+		printf 'Environments:\n'
+		for name in &quot;${!keypairs[@]}&quot;; do
+			printf '  %s\n' &quot;$name&quot;
+		done
+	else
+		(
+			creds=(${keypairs[$1]})
+			export AWS_ACCESS_KEY=&quot;${creds[0]}&quot;
+			export AWS_ACCESS_KEY_ID=&quot;$AWS_ACCESS_KEY&quot;
+			export AWS_SECRET_KEY=&quot;${creds[1]}&quot;
+			export AWS_SECRET_ACCESS_KEY=&quot;$AWS_SECRET_KEY&quot;
+			export AWS_CREDENTIAL_FILE=&quot;/tmp/.$USER-$1.awskey&quot;
+			touch &quot;$AWS_CREDENTIAL_FILE&quot;
+			chmod 0600 &quot;$AWS_CREDENTIAL_FILE&quot; || return 1
+			printf 'AWSAccessKeyId=%s\nAWSSecretKey=%s\n' &quot;$AWS_ACCESS_KEY&quot; &quot;$AWS_SECRET_KEY&quot; &gt; &quot;$AWS_CREDENTIAL_FILE&quot;
+
+
+			if [[ -n &quot;${regions[$1]}&quot; ]]; then
+				export AWS_DEFAULT_REGION=&quot;${regions[$1]}&quot;
+			fi
+
+			export SHELLSTACK=&quot;$SHELLSTACK aws:$1&quot;
+			shift
+			if (( $# &gt;= 1 )); then
+				exec &quot;$@&quot;
+			else
+				exec &quot;$SHELL&quot;
+			fi
+		)
+	fi
+}
+</code></pre>
+
+<p>Have fun!</p>
+
+      </article>
+
+      <p class="post-meta">Tags:&nbsp;
+        
+            
+            <a href="https://mrgossett.github.io//tags/rc">rc</a>
+        
+            ,&nbsp;
+            <a href="https://mrgossett.github.io//tags/AWS">AWS</a>
+        
+            ,&nbsp;
+            <a href="https://mrgossett.github.io//tags/bash">bash</a>
+        
+      </p>
+
+      
+
+    </div>
+  </div>
+</div>
+    <footer class="footer">
+      <div class="p2 wrap">
+        <div class="measure mt1 center">
+      <nav class="social-icons icons">
+<a class="fa fa-rss rss" href="https://mrgossett.github.io/index.xml"></a>
+
+<a class="fa fa-twitter twitter" href="https://twitter.com/MrGossett"></a>
+
+</nav>
+
+          <small>
+            Copyright &#169; 2015<br>
+            Powered by <a href="http://gohugo.io/" target="_blank">Hugo</a> &amp; <a href="https://github.com/azmelanar/hugo-theme-pixyll" target="_blank">Pixyll</a>
+          </small>
+        </div>
+      </div>
+    </footer>
+
+    
+    <script src="https://mrgossett.github.io/js/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    
+    
+
+
+</body>
+</html>
+

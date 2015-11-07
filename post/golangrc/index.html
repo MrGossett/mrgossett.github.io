@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>~/.golangrc - MrGossett</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <meta name="keywords" content="">
+  <link rel="canonical" href="https://mrgossett.github.io/post/golangrc/">
+
+  
+  
+  <link rel="stylesheet" type="text/css" href="https://mrgossett.github.io/css/basscss.css">
+  <link rel="stylesheet" type="text/css" href="https://mrgossett.github.io/css/main.css">
+
+  
+  
+  <link rel="stylesheet" type="text/css" href="https://mrgossett.github.io/css/highlight/styles/xcode.css">
+
+  
+  
+  <link rel='stylesheet' type='text/css' href='//fonts.googleapis.com/css?family=Ubuntu:400,700,400italic,700italic&subset=latin,cyrillic-ext,cyrillic'>
+  <link rel='stylesheet' type='text/css' href='//fonts.googleapis.com/css?family=Lato:900,300'>
+
+  
+
+</head>
+<body class="">
+
+<div class="site-wrap">
+  <header class="site-header px2 px-responsive">
+  <div class="mt2 wrap">
+    <div class="measure">
+      <a href="https://mrgossett.github.io/" class="site-title">
+      	MrGossett
+      	
+      </a>
+      <nav class="site-nav right">
+      <a href="https://mrgossett.github.io/tags">Tags</a>
+
+
+      </nav>
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</header>
+
+  <div class="post p2 p-responsive wrap" role="main">
+    <div class="measure">
+      <div class="post-header mb2">
+        <h1 class="py2">~/.golangrc</h1>
+        <span class="post-meta">Mar 25, 2015 by Tim Gossett</span><br>
+        
+      </div>
+
+      <article class="post-content">
+      
+
+<h2 id="tl-dr:8bbc5ee51fba8620737dd6f167a1ec84">TL;DR</h2>
+
+<p>I wrote some bash functions that are a regular part of my workflow. <a href="#tldr">Check them out</a></p>
+
+<h2 id="go-source:8bbc5ee51fba8620737dd6f167a1ec84">Go source</h2>
+
+<p>I have Go&rsquo;s source cloned in <code>~/goroot</code>. Since the source is now managed with <code>git</code>, I can switch between versions very easily, and I can browse the source for Go&rsquo;s standard library using my editor.</p>
+
+<p>To clone the source, I did this:</p>
+
+<pre><code class="language-sh">git clone https://go.googlesource.com/go ~/goroot
+</code></pre>
+
+<p>Since this constitutes <a href="https://golang.org/doc/install#tarball_non_standard">&ldquo;installing [Go] to a custom location&rdquo;</a>, Go will need a few environment variables set:</p>
+
+<pre><code class="language-bash">export GOROOT=$HOME/goroot
+export GOPATH=$HOME/go
+export GOBIN=$GOROOT/bin
+export PATH=$GOBIN:$PATH
+</code></pre>
+
+<h2 id="helper-functions:8bbc5ee51fba8620737dd6f167a1ec84">Helper functions</h2>
+
+<p>I wrote a few helper functions which are basically aliases for commands I execute often.</p>
+
+<h3 id="go-me:8bbc5ee51fba8620737dd6f167a1ec84">Go me!</h3>
+
+<p>Take me to my personal projects in <code>GOPATH</code>:</p>
+
+<pre><code class="language-bash">function gome() {
+	cd $GOPATH/src/github.com/MrGossett
+}
+</code></pre>
+
+<h3 id="go-work:8bbc5ee51fba8620737dd6f167a1ec84">Go work.</h3>
+
+<p>Take me to my work projects in <code>GOPATH</code>:</p>
+
+<pre><code class="language-bash">function gowork() {
+	cd $GOPATH/src/github.com/StealthNinjaOrgName
+}
+</code></pre>
+
+<h3 id="check-it-before-code-reviewers-wreck-it:8bbc5ee51fba8620737dd6f167a1ec84">Check it before code reviewers wreck it</h3>
+
+<p>We have pretty high standards for code quality at work. It&rsquo;s not a direct mapping, but if any of the popular Go code quality tools complain about my code, then so will my co-workers. As a last step before I check in my code, I run <code>style-check</code>, which executes <code>golint</code>, <code>go vet</code>, <code>gofmt</code>, <code>gocyclo</code>, and <code>go build</code>:</p>
+
+<pre><code class="language-bash">function style-check() {
+	golint ./...
+	go vet ./...
+	find . -path ./Godeps -prune -o -name '*.go' -exec gofmt -l -s {} +
+	find . -path ./Godeps -prune -o -name '*.go' -exec gocyclo -over 10 {} +
+	go build -o /tmp/a
+}
+</code></pre>
+
+<h2 id="all-together-now:8bbc5ee51fba8620737dd6f167a1ec84">All together now</h2>
+
+<p><a name="tldr"></a>Here&rsquo;s my full <code>~/.golangrc</code></p>
+
+<pre><code class="language-bash"># ~/.golangrc
+
+export GOROOT=$HOME/goroot
+export GOPATH=$HOME/go
+export GOBIN=$GOROOT/bin
+export PATH=$GOBIN:$PATH
+
+function gome() {
+    cd $GOPATH/src/github.com/MrGossett
+}
+
+function gowork() {
+    cd $GOPATH/src/github.com/StealthNinjaOrgName
+}
+
+function style-check() {
+    golint ./...
+    go vet ./...
+    find . -path ./Godeps -prune -o -name '*.go' -exec gofmt -l -s {} +
+    find . -path ./Godeps -prune -o -name '*.go' -exec gocyclo -over 10 {} +
+    go build -o /tmp/a
+}
+</code></pre>
+
+      </article>
+
+      <p class="post-meta">Tags:&nbsp;
+        
+            
+            <a href="https://mrgossett.github.io//tags/rc">rc</a>
+        
+            ,&nbsp;
+            <a href="https://mrgossett.github.io//tags/go">go</a>
+        
+            ,&nbsp;
+            <a href="https://mrgossett.github.io//tags/bash">bash</a>
+        
+      </p>
+
+      
+
+    </div>
+  </div>
+</div>
+    <footer class="footer">
+      <div class="p2 wrap">
+        <div class="measure mt1 center">
+      <nav class="social-icons icons">
+<a class="fa fa-rss rss" href="https://mrgossett.github.io/index.xml"></a>
+
+<a class="fa fa-twitter twitter" href="https://twitter.com/MrGossett"></a>
+
+</nav>
+
+          <small>
+            Copyright &#169; 2015<br>
+            Powered by <a href="http://gohugo.io/" target="_blank">Hugo</a> &amp; <a href="https://github.com/azmelanar/hugo-theme-pixyll" target="_blank">Pixyll</a>
+          </small>
+        </div>
+      </div>
+    </footer>
+
+    
+    <script src="https://mrgossett.github.io/js/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    
+    
+
+
+</body>
+</html>
+

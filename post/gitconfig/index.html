@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>~/.gitconfig aliases - MrGossett</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <meta name="keywords" content="">
+  <link rel="canonical" href="https://mrgossett.github.io/post/gitconfig/">
+
+  
+  
+  <link rel="stylesheet" type="text/css" href="https://mrgossett.github.io/css/basscss.css">
+  <link rel="stylesheet" type="text/css" href="https://mrgossett.github.io/css/main.css">
+
+  
+  
+  <link rel="stylesheet" type="text/css" href="https://mrgossett.github.io/css/highlight/styles/xcode.css">
+
+  
+  
+  <link rel='stylesheet' type='text/css' href='//fonts.googleapis.com/css?family=Ubuntu:400,700,400italic,700italic&subset=latin,cyrillic-ext,cyrillic'>
+  <link rel='stylesheet' type='text/css' href='//fonts.googleapis.com/css?family=Lato:900,300'>
+
+  
+
+</head>
+<body class="">
+
+<div class="site-wrap">
+  <header class="site-header px2 px-responsive">
+  <div class="mt2 wrap">
+    <div class="measure">
+      <a href="https://mrgossett.github.io/" class="site-title">
+      	MrGossett
+      	
+      </a>
+      <nav class="site-nav right">
+      <a href="https://mrgossett.github.io/tags">Tags</a>
+
+
+      </nav>
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</header>
+
+  <div class="post p2 p-responsive wrap" role="main">
+    <div class="measure">
+      <div class="post-header mb2">
+        <h1 class="py2">~/.gitconfig aliases</h1>
+        <span class="post-meta">May 14, 2015 by Tim Gossett</span><br>
+        
+      </div>
+
+      <article class="post-content">
+      
+
+<p>I use <code>git</code> from the command line as part of my regular workflow. Configuring aliases saves just a few keystrokes, but those keystrokes add up (My bash history says I&rsquo;ve executed <code>git</code> commands 121 times in my current shell session, which has spanned about two workdays).</p>
+
+<p>I have <code>git</code> itself aliased to <code>g</code> in my <code>~/.bashrc</code>. <code>git</code> allows aliasing subcommands in the <code>[alias]</code> section of <code>~/.gitconfig</code>. Below are my aliases in workflow order:</p>
+
+<h2 id="fetch-checkout:bbc5fa23bc227b3911b7322b3bf8cc85">Fetch &amp; Checkout</h2>
+
+<p>To kick it off, I typically <code>git fetch</code> from remote to make sure <code>git</code> is aware of the branches that exist on the remote end. Then I <code>git checkout</code> the branch that I want to work on, whether the branch already exists on the remote end or I create it locally. Those two commands look like <code>g f</code> and <code>g co</code> with the following aliases:</p>
+
+<pre><code>f = fetch
+co = checkout
+</code></pre>
+
+<h2 id="status-diff:bbc5fa23bc227b3911b7322b3bf8cc85">Status &amp; Diff</h2>
+
+<p>To see what&rsquo;s changed, I use <code>git status</code> and <code>git diff</code> often.</p>
+
+<p><code>git status</code> will just list the files that have changed since the last commit (both staged and unstaged). I have it aliased as <code>g s</code></p>
+
+<p>Sometimes I want to see changes that have not yet been staged for a commit (plain <code>git diff</code>), and other times I want to see only the changes that have been staged for a commit (<code>git diff --staged</code>). With the following aliases, those will end up looking like <code>g d</code> and <code>g ds</code>.</p>
+
+<pre><code>s = status
+d = diff
+ds = diff --staged
+</code></pre>
+
+<h2 id="add:bbc5fa23bc227b3911b7322b3bf8cc85">Add</h2>
+
+<p>I typically stage changes wholesale instead of adding file-by-file; that&rsquo;s the behavior of <code>git add --all</code>, which I aliased as <code>g a</code>. Sometimes, though, it&rsquo;s better to add only some of the parts of a file that have changed and not others. That&rsquo;s possible with <code>git add --patch</code>, aliased as <code>g ap</code>.</p>
+
+<pre><code>a = add --all
+ap = add --patch
+</code></pre>
+
+<h2 id="commit:bbc5fa23bc227b3911b7322b3bf8cc85">Commit</h2>
+
+<p>Once I&rsquo;ve staged everything I want to include in a changeset, it&rsquo;s time to <code>git commit</code>. My first alias, <code>g c</code>, expands to <code>git commit -v</code>. The behavior of the <code>-v</code> flag is described in <code>git</code>&rsquo;s manpage like this:</p>
+
+<pre><code>-v, --verbose
+   Show unified diff between the HEAD commit and what would be committed at the bottom of the commit message template to help the user describe the commit by reminding what changes the commit has.
+   Note that this diff output doesn't have its lines prefixed with #. This diff will not be a part of the commit message.
+</code></pre>
+
+<p>Occasionally, I make a typo in the commit message, or I forget a small change that I want to slip into the commit I just made. Both scenarios involve <code>git commit --amend</code>, which I&rsquo;ve alased as <code>g ca</code>.</p>
+
+<pre><code>c = commit -v
+ca = commit --amend
+</code></pre>
+
+<h2 id="trim:bbc5fa23bc227b3911b7322b3bf8cc85">Trim</h2>
+
+<p>Over the course of a few weeks (or a couple of intense days), I may end up with a few dozen feature branches in one repo, most of which have been merged into <code>master</code>. To clean up the branches that have been merged, I use the following alias, which executes a shell command:</p>
+
+<pre><code>trim = &quot;!sh -c 'git branch --merged | grep  -v \&quot;\\*\\|master\\|production\&quot; | xargs -n1 git branch -d'&quot;
+</code></pre>
+
+<p>This lists all of the branches that have been merged, drops <code>master</code>, <code>production</code>, and the current branch from that list, and then passes the final list to <code>git branch -d</code> to delete them.</p>
+
+<h2 id="all-together:bbc5fa23bc227b3911b7322b3bf8cc85">All Together</h2>
+
+<p>Here&rsquo;s the whole thing:</p>
+
+<pre><code>[alias]
+    f = fetch
+    co = checkout
+    d = diff
+    ds = diff --staged
+    a = add --all
+    ap = add --patch
+    s = status
+    c = commit -v
+    ca = commit --amend
+    trim = &quot;!sh -c 'git branch --merged | grep  -v \&quot;\\*\\|master\\|production\&quot; | xargs -n1 git branch -d'&quot;
+</code></pre>
+
+      </article>
+
+      <p class="post-meta">Tags:&nbsp;
+        
+            
+            <a href="https://mrgossett.github.io//tags/rc">rc</a>
+        
+            ,&nbsp;
+            <a href="https://mrgossett.github.io//tags/bash">bash</a>
+        
+            ,&nbsp;
+            <a href="https://mrgossett.github.io//tags/git">git</a>
+        
+      </p>
+
+      
+
+    </div>
+  </div>
+</div>
+    <footer class="footer">
+      <div class="p2 wrap">
+        <div class="measure mt1 center">
+      <nav class="social-icons icons">
+<a class="fa fa-rss rss" href="https://mrgossett.github.io/index.xml"></a>
+
+<a class="fa fa-twitter twitter" href="https://twitter.com/MrGossett"></a>
+
+</nav>
+
+          <small>
+            Copyright &#169; 2015<br>
+            Powered by <a href="http://gohugo.io/" target="_blank">Hugo</a> &amp; <a href="https://github.com/azmelanar/hugo-theme-pixyll" target="_blank">Pixyll</a>
+          </small>
+        </div>
+      </div>
+    </footer>
+
+    
+    <script src="https://mrgossett.github.io/js/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    
+    
+
+
+</body>
+</html>
+

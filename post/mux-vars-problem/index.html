@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>The mux.Vars Problem - MrGossett</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <meta name="keywords" content="">
+  <link rel="canonical" href="https://mrgossett.github.io/post/mux-vars-problem/">
+
+  
+  
+  <link rel="stylesheet" type="text/css" href="https://mrgossett.github.io/css/basscss.css">
+  <link rel="stylesheet" type="text/css" href="https://mrgossett.github.io/css/main.css">
+
+  
+  
+  <link rel="stylesheet" type="text/css" href="https://mrgossett.github.io/css/highlight/styles/xcode.css">
+
+  
+  
+  <link rel='stylesheet' type='text/css' href='//fonts.googleapis.com/css?family=Ubuntu:400,700,400italic,700italic&subset=latin,cyrillic-ext,cyrillic'>
+  <link rel='stylesheet' type='text/css' href='//fonts.googleapis.com/css?family=Lato:900,300'>
+
+  
+
+</head>
+<body class="">
+
+<div class="site-wrap">
+  <header class="site-header px2 px-responsive">
+  <div class="mt2 wrap">
+    <div class="measure">
+      <a href="https://mrgossett.github.io/" class="site-title">
+      	MrGossett
+      	
+      </a>
+      <nav class="site-nav right">
+      <a href="https://mrgossett.github.io/tags">Tags</a>
+
+
+      </nav>
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</header>
+
+  <div class="post p2 p-responsive wrap" role="main">
+    <div class="measure">
+      <div class="post-header mb2">
+        <h1 class="py2">The mux.Vars Problem</h1>
+        <span class="post-meta">Apr 14, 2015 by Tim Gossett</span><br>
+        
+      </div>
+
+      <article class="post-content">
+      
+
+<p>We&rsquo;ve begun to use <code>github.com/gorilla/mux</code> at work as a router for many of our services. I ran into a snag when writing some unit tests, and learned a bit about the design of <code>mux</code> in the process.</p>
+
+<h3 id="a-quick-detour:96a1b81de0da9a6b7fcdff1480ceade0">A quick detour</h3>
+
+<p>When I say &ldquo;unit tests&rdquo;, I mean this:</p>
+
+<blockquote>
+<p>&hellip; a software development process in which the smallest testable parts of an application, called units, are individually and independently scrutinized for proper operation.
+<a href="http://searchsoftwarequality.techtarget.com/definition/unit-testing">definition from techtarget.com</a></p>
+</blockquote>
+
+<p>More directly, I mean calling a single function with inputs formed specifically to test the behavior of that function. When I &ldquo;unit test&rdquo; handler funcs, I call the handler directly; I don&rsquo;t want to involve other parts of the system (like a <code>mux.Router</code>).</p>
+
+<h3 id="the-mux-vars-problem:96a1b81de0da9a6b7fcdff1480ceade0">The <code>mux.Vars</code> problem</h3>
+
+<p><code>github.com/gorilla/mux</code> is a Golang HTTP router. Among other features, it provides a nice way to extract parameters from a request&rsquo;s path, using <code>mux.Vars</code> which is a <code>map[string]string</code>. However, the way it works makes it impossible to unit test handlers (in a pure sense).</p>
+
+<p>Here&rsquo;s an example:</p>
+
+<pre><code class="language-go">router.Methods(&quot;GET&quot;).Path(&quot;/posts/{year}/{month}/{day}&quot;).HandlerFunc(ShowPost)
+</code></pre>
+
+<p>This sets up a route for <code>GET /posts/{year}/{month}/{day}</code> where the <code>year</code>, <code>month</code>, and <code>day</code> segments of the request path are parsed as variables in <code>mux.Vars</code>.</p>
+
+<p>Then, in the <code>ShowPost</code> handler, the <code>year</code>, <code>month</code>, and <code>day</code> variables are accessed like this:</p>
+
+<pre><code class="language-go">vars := mux.Vars(req)
+
+year  := vars[&quot;year&quot;]
+month := vars[&quot;month&quot;]
+day   := vars[&quot;day&quot;]
+</code></pre>
+
+<p>Let&rsquo;s get a little insight into how this works. Here&rsquo;s the <a href="https://github.com/gorilla/mux/blob/master/mux.go#L259">definition of the <code>mux.Vars</code></a> func:</p>
+
+<pre><code class="language-go">// Vars returns the route variables for the current request, if any.
+func Vars(r *http.Request) map[string]string {
+	if rv := context.Get(r, varsKey); rv != nil {
+		return rv.(map[string]string)
+	}
+	return nil
+}
+</code></pre>
+
+<p>This is using <code>github.com/gorilla/context</code>, which maintains a global <code>map[*http.Request]map[interface{}]interface{}</code>. When <code>mux</code> is routing a request, it parses the parameters from the request path, forms the <code>map[string]string</code> for <code>Vars</code>, and does <code>context.Set(req, varsKey, vars)</code>, which stashes <code>vars</code> in the global map, using <code>req</code> and then <code>varsKey</code> as keys.</p>
+
+<p>In the func above, those vars are fetched with <code>context.Get(r, varsKey)</code> as a <code>map[interface{}]interface{}</code>, and then type-asserted back into a <code>map[string]string</code>.</p>
+
+<p>When unit-testing a handler, if the handler uses <code>mux.Vars</code> to get at request params (as we did in the example above), then we&rsquo;ll need to craft a <code>map[string]string</code> to use with the test. We then would want to set that map in the request&rsquo;s context with something like <code>context.Set(testReq, someKey, testMap)</code>. So&hellip; where do we get <code>someKey</code>?</p>
+
+<p>Back in that <a href="https://github.com/gorilla/mux/blob/master/mux.go#L251">same file</a> in <code>github.com/gorilla/mux</code>, here&rsquo;s the definition of <code>varsKey</code>:</p>
+
+<pre><code class="language-go">type contextKey int
+
+const (
+	varsKey contextKey = iota
+	routeKey
+)
+</code></pre>
+
+<p><code>varsKey</code> is of type <code>contextKey</code>, which is unexported; that means it&rsquo;s not accessible outside of the <code>github.com/gorilla/mux</code> package. This means we can&rsquo;t craft the right type of key to set our test vars in the context of a test request. That means we have to have <code>github.com/gorilla/mux</code> process the test request. So we have to create a <code>mux.Router</code> wired up with the handler under test, and call <code>ServeHTTP</code> on that router. That&rsquo;s closer to integration testing than pure unit testing of the handler.</p>
+
+<p>This all would be solved if either the <code>varsKey</code> var or the <code>contextKey</code> type were exported. I&rsquo;m consdering submitting a pull request to <code>github.com/gorilla/mux</code> to do just that; if I do, I&rsquo;ll link to it here.</p>
+
+      </article>
+
+      <p class="post-meta">Tags:&nbsp;
+        
+            
+            <a href="https://mrgossett.github.io//tags/go">go</a>
+        
+      </p>
+
+      
+
+    </div>
+  </div>
+</div>
+    <footer class="footer">
+      <div class="p2 wrap">
+        <div class="measure mt1 center">
+      <nav class="social-icons icons">
+<a class="fa fa-rss rss" href="https://mrgossett.github.io/index.xml"></a>
+
+<a class="fa fa-twitter twitter" href="https://twitter.com/MrGossett"></a>
+
+</nav>
+
+          <small>
+            Copyright &#169; 2015<br>
+            Powered by <a href="http://gohugo.io/" target="_blank">Hugo</a> &amp; <a href="https://github.com/azmelanar/hugo-theme-pixyll" target="_blank">Pixyll</a>
+          </small>
+        </div>
+      </div>
+    </footer>
+
+    
+    <script src="https://mrgossett.github.io/js/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    
+    
+
+
+</body>
+</html>
+
