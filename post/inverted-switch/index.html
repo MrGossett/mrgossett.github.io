@@ -126,7 +126,7 @@ case req.Foo, req.Bar:
 
 <pre><code class="language-go">switch int64(0) {
 case req.ThingID, req.SomeDate.UnixNano():
-        // nope
+        return errInvalidRequest
 }
 </code></pre>
 
