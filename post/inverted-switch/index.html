@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title> - MrGossett</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <meta name="keywords" content="">
+  <link rel="canonical" href="http://mrgossett.com/post/inverted-switch/">
+
+  
+  
+  <link rel="stylesheet" type="text/css" href="http://mrgossett.com/css/basscss.css">
+  <link rel="stylesheet" type="text/css" href="http://mrgossett.com/css/main.css">
+
+  
+  
+  <link rel="stylesheet" type="text/css" href="http://mrgossett.com/css/highlight/styles/xcode.css">
+
+  
+  
+  <link rel='stylesheet' type='text/css' href='//fonts.googleapis.com/css?family=Ubuntu:400,700,400italic,700italic&subset=latin,cyrillic-ext,cyrillic'>
+  <link rel='stylesheet' type='text/css' href='//fonts.googleapis.com/css?family=Lato:900,300'>
+
+  
+
+</head>
+<body class="">
+
+<div class="site-wrap">
+  <header class="site-header px2 px-responsive">
+  <div class="mt2 wrap">
+    <div class="measure">
+      <a href="http://mrgossett.com/" class="site-title">
+      	MrGossett
+      	
+      </a>
+      <nav class="site-nav right">
+      <a href="http://mrgossett.com/tags">Tags</a>
+
+
+      </nav>
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</header>
+
+  <div class="post p2 p-responsive wrap" role="main">
+    <div class="measure">
+      <div class="post-header mb2">
+        <h1 class="py2"></h1>
+        <span class="post-meta">Jan 1, 0001</span><br>
+        
+      </div>
+
+      <article class="post-content">
+      
+
+<p>title: Inverted Switch
+date: 2015/08/09 14:15:53</p>
+
+<h2 id="tags-go:5cc9f219b49937eaa21ea719d97ba525">tags: [&ldquo;go&rdquo;]</h2>
+
+<p>Go is great for building APIs. It&rsquo;s common for APIs to perform some validation on the data structures used in request bodies.</p>
+
+<h3 id="some-structure:5cc9f219b49937eaa21ea719d97ba525">some structure</h3>
+
+<p>Assume we&rsquo;re handling a request with the following body:</p>
+
+<pre><code class="language-json">{
+  &quot;thing_id&quot;: 123,
+  &quot;foo&quot;: &quot;fizz&quot;,
+  &quot;bar&quot;: &quot;buzz&quot;,
+  &quot;some_date&quot;: &quot;2015-08-09T07:25:43-05:00&quot;
+}
+</code></pre>
+
+<p>This can be unmarshalled onto the following Go struct:</p>
+
+<pre><code class="language-go">type SomeRequest struct {
+	ThingID  int64 `json:&quot;thing_id&quot;`
+	Foo, Bar string
+	SomeDate time.Time `json:&quot;some_date&quot;`
+}
+</code></pre>
+
+<p><code>package json</code> will do the heavy lifting to parse the date and convert the JSON numeric into a <code>uint64</code>. If the client had supplied something other than an ISO8601 date string for <code>some_date</code>, <code>package json</code> would squawk. The same goes for values in <code>thing_id</code> that cannot be converted to an <code>int64</code>.</p>
+
+<h3 id="validate-me:5cc9f219b49937eaa21ea719d97ba525">validate me</h3>
+
+<p>Now let&rsquo;s validate that the client supplied data for each attribute in the struct.</p>
+
+<p>There are some great packages available to define constraints with struct annotations. However, I prefer hand-rolling validation with a few simple funcs.</p>
+
+<pre><code class="language-go">func (req SomeRequest) validate() error {
+	if req.Foo == &quot;&quot; {
+		return errInvalidRequest
+	}
+
+	if req.Bar == &quot;&quot; {
+		return errInvalidRequest
+	}
+
+	if req.ThingID == 0 {
+		return errInvalidRequest
+	}
+
+	if req.SomeDate.UnixNano() == 0 {
+		return errInvalidRequest
+	}
+
+	return nil
+}
+</code></pre>
+
+<p>This naïve approach gets the job done, but we can do better. <a href="https://github.com/fzipp/gocyclo">gocyclo</a> calculates the cyclomatic complexity of the func above at 5.</p>
+
+<h3 id="inverted-switch:5cc9f219b49937eaa21ea719d97ba525">inverted switch</h3>
+
+<p>The first two conditionals are testing for the same condition in two different attributes. In my view, the most elegant way to detect if one thing matches one of a few other things is with a <code>switch</code>. I&rsquo;m accustomed to using a variable as the control expression and using hard-coded literals or constants as the cases; but we can invert that pattern:</p>
+
+<pre><code class="language-go">switch &quot;&quot; {
+case req.Foo, req.Bar:
+        return errInvalidRequest
+}
+</code></pre>
+
+<p>The second two conditionals are dealing with attributes of two different types: one is an <code>int64</code> and the other is a <a href="https://golang.org/pkg/time/#Time"><code>time.Time</code></a>. However, <code>time.Time</code> can covert itself to an <code>int64</code> with <a href="https://golang.org/pkg/time/#Time.UnixNano"><code>(time.Time).UnixNano()</code></a>. We can use that to apply the same pattern here:</p>
+
+<pre><code class="language-go">switch int64(0) {
+case req.ThingID, req.SomeDate.UnixNano():
+        // nope
+}
+</code></pre>
+
+<p>The <code>validate</code> func now looks like this:</p>
+
+<pre><code class="language-go">func (req SomeRequest) validate() error {
+	switch &quot;&quot; {
+	case req.Foo, req.Bar:
+		return errInvalidRequest
+	}
+
+	switch int64(0) {
+	case req.ThingID, req.SomeDate.UnixNano():
+		return errInvalidRequest
+	}
+
+	return nil
+}
+</code></pre>
+
+<p>Much better.</p>
+
+<p>As a bonus, <code>gocyclo</code> now calculates complexity at 3.</p>
+
+<pre><code>$ gocyclo .
+3 main (SomeRequest).validate
+</code></pre>
+
+      </article>
+
+      <p class="post-meta">Tags:&nbsp;
+        
+      </p>
+
+      
+
+    </div>
+  </div>
+</div>
+    <footer class="footer">
+      <div class="p2 wrap">
+        <div class="measure mt1 center">
+      <nav class="social-icons icons">
+<a class="fa fa-rss rss" href="http://mrgossett.com/index.xml"></a>
+
+<a class="fa fa-twitter twitter" href="https://twitter.com/MrGossett"></a>
+
+</nav>
+
+          <small>
+            Copyright &#169; 2015<br>
+            Powered by <a href="http://gohugo.io/" target="_blank">Hugo</a> &amp; <a href="https://github.com/azmelanar/hugo-theme-pixyll" target="_blank">Pixyll</a>
+          </small>
+        </div>
+      </div>
+    </footer>
+
+    
+    <script src="http://mrgossett.com/js/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    
+    
+
+
+</body>
+</html>
+
