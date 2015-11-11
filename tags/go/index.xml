@@ -7,7 +7,16 @@
     <language>en-us</language>
     
     
-    <updated>Tue, 14 Apr 2015 09:22:04 -0400</updated>
+    <updated>Sun, 09 Aug 2015 14:15:53 -0500</updated>
+    
+    <item>
+      <title>Inverted Switch</title>
+      <link>http://mrgossett.com/post/inverted-switch/</link>
+      <pubDate>Sun, 09 Aug 2015 14:15:53 -0500</pubDate>
+      
+      <guid>http://mrgossett.com/post/inverted-switch/</guid>
+      <description>Go is great for building APIs. It&amp;rsquo;s common for APIs to perform some validation on the data structures used in request bodies. some structure Assume we&amp;rsquo;re handling a request with the following body: { &amp;quot;thing_id&amp;quot;: 123, &amp;quot;foo&amp;quot;: &amp;quot;fizz&amp;quot;, &amp;quot;bar&amp;quot;: &amp;quot;buzz&amp;quot;, &amp;quot;some_date&amp;quot;: &amp;quot;2015-08-09T07:25:43-05:00&amp;quot; } This can be unmarshalled onto the following Go struct: type SomeRequest struct { ThingID int64 `json:&amp;quot;thing_id&amp;quot;` Foo, Bar string SomeDate time.Time `json:&amp;quot;some_date&amp;quot;` } package json will do the heavy lifting to parse the date and convert the JSON numeric into a uint64.</description>
+    </item>
     
     <item>
       <title>The mux.Vars Problem</title>

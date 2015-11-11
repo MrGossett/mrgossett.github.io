@@ -7,7 +7,16 @@
     <language>en-us</language>
     
     
-    <updated>Thu, 14 May 2015 14:28:56 -0400</updated>
+    <updated>Sun, 09 Aug 2015 14:15:53 -0500</updated>
+    
+    <item>
+      <title>Inverted Switch</title>
+      <link>http://mrgossett.com/post/inverted-switch/</link>
+      <pubDate>Sun, 09 Aug 2015 14:15:53 -0500</pubDate>
+      
+      <guid>http://mrgossett.com/post/inverted-switch/</guid>
+      <description>Go is great for building APIs. It&amp;rsquo;s common for APIs to perform some validation on the data structures used in request bodies. some structure Assume we&amp;rsquo;re handling a request with the following body: { &amp;quot;thing_id&amp;quot;: 123, &amp;quot;foo&amp;quot;: &amp;quot;fizz&amp;quot;, &amp;quot;bar&amp;quot;: &amp;quot;buzz&amp;quot;, &amp;quot;some_date&amp;quot;: &amp;quot;2015-08-09T07:25:43-05:00&amp;quot; } This can be unmarshalled onto the following Go struct: type SomeRequest struct { ThingID int64 `json:&amp;quot;thing_id&amp;quot;` Foo, Bar string SomeDate time.Time `json:&amp;quot;some_date&amp;quot;` } package json will do the heavy lifting to parse the date and convert the JSON numeric into a uint64.</description>
+    </item>
     
     <item>
       <title>~/.gitconfig aliases</title>
@@ -79,15 +88,6 @@
       
       <guid>http://mrgossett.com/post/dockerrc/</guid>
       <description>We use Docker at work as part of our deployment strategy. Since we ship dockerized apps, Docker is part of our development environment. I develop in OS X, so I use Boot2Docker. One of the original core contributors to Docker, @creack, was part of our team for a while. It was a great opportunity to get familiar with Docker as a technology. He helped me put together a ~/.dockerrc file that ensures my development environment is always ready to go.</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>http://mrgossett.com/post/inverted-switch/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 UTC</pubDate>
-      
-      <guid>http://mrgossett.com/post/inverted-switch/</guid>
-      <description>title: Inverted Switch date: 2015/08/09 14:15:53 tags: [&amp;ldquo;go&amp;rdquo;] Go is great for building APIs. It&amp;rsquo;s common for APIs to perform some validation on the data structures used in request bodies. some structure Assume we&amp;rsquo;re handling a request with the following body: { &amp;quot;thing_id&amp;quot;: 123, &amp;quot;foo&amp;quot;: &amp;quot;fizz&amp;quot;, &amp;quot;bar&amp;quot;: &amp;quot;buzz&amp;quot;, &amp;quot;some_date&amp;quot;: &amp;quot;2015-08-09T07:25:43-05:00&amp;quot; } This can be unmarshalled onto the following Go struct: type SomeRequest struct { ThingID int64 `json:&amp;quot;thing_id&amp;quot;` Foo, Bar string SomeDate time.Time `json:&amp;quot;some_date&amp;quot;` } package json will do the heavy lifting to parse the date and convert the JSON numeric into a uint64.</description>
     </item>
     
   </channel>
