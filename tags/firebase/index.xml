@@ -3,7 +3,7 @@
   <channel>
       <title>Firebase on MrGossett </title>
       <generator uri="https://gohugo.io">Hugo</generator>
-    <link>https://mrgossett.github.io/tags/firebase/</link>
+    <link>https://mrgossett.com/tags/firebase/</link>
     <language>en-us</language>
     
     
@@ -11,10 +11,10 @@
     
     <item>
       <title>Collaborative Apps with Go at Citrix</title>
-      <link>https://mrgossett.github.io/post/collaborative-apps-go-citrix/</link>
+      <link>https://mrgossett.com/post/collaborative-apps-go-citrix/</link>
       <pubDate>Tue, 17 Mar 2015 08:59:18 -0400</pubDate>
       
-      <guid>https://mrgossett.github.io/post/collaborative-apps-go-citrix/</guid>
+      <guid>https://mrgossett.com/post/collaborative-apps-go-citrix/</guid>
       <description>Reposted from the Firebase blog Collaborative Apps with Go at Citrix Tim Gossett and his colleague Steven Berlanga are Backend Developers for the Realtime Platform Group at Citrix. They build services to enable collaborative web and mobile apps. Our team is developing realtime communications technology, and we’re using Firebase for low-latency data sync. Our platform provides a rally point for mobile and web clients to connect and start collaborating. Part of that collaboration happens in Firebase.</description>
     </item>
     
