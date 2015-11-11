@@ -3,7 +3,7 @@
   <channel>
       <title> on MrGossett </title>
       <generator uri="https://gohugo.io">Hugo</generator>
-    <link>https://mrgossett.com/</link>
+    <link>http://mrgossett.com/</link>
     <language>en-us</language>
     
     
@@ -11,73 +11,73 @@
     
     <item>
       <title>~/.gitconfig aliases</title>
-      <link>https://mrgossett.com/post/gitconfig/</link>
+      <link>http://mrgossett.com/post/gitconfig/</link>
       <pubDate>Thu, 14 May 2015 14:28:56 -0400</pubDate>
       
-      <guid>https://mrgossett.com/post/gitconfig/</guid>
+      <guid>http://mrgossett.com/post/gitconfig/</guid>
       <description>I use git from the command line as part of my regular workflow. Configuring aliases saves just a few keystrokes, but those keystrokes add up (My bash history says I&amp;rsquo;ve executed git commands 121 times in my current shell session, which has spanned about two workdays). I have git itself aliased to g in my ~/.bashrc. git allows aliasing subcommands in the [alias] section of ~/.gitconfig. Below are my aliases in workflow order: Fetch &amp;amp; Checkout To kick it off, I typically git fetch from remote to make sure git is aware of the branches that exist on the remote end.</description>
     </item>
     
     <item>
       <title>The mux.Vars Problem</title>
-      <link>https://mrgossett.com/post/mux-vars-problem/</link>
+      <link>http://mrgossett.com/post/mux-vars-problem/</link>
       <pubDate>Tue, 14 Apr 2015 09:22:04 -0400</pubDate>
       
-      <guid>https://mrgossett.com/post/mux-vars-problem/</guid>
+      <guid>http://mrgossett.com/post/mux-vars-problem/</guid>
       <description>We&amp;rsquo;ve begun to use github.com/gorilla/mux at work as a router for many of our services. I ran into a snag when writing some unit tests, and learned a bit about the design of mux in the process. A quick detour When I say &amp;ldquo;unit tests&amp;rdquo;, I mean this: &amp;hellip; a software development process in which the smallest testable parts of an application, called units, are individually and independently scrutinized for proper operation.</description>
     </item>
     
     <item>
       <title>~/.golangrc</title>
-      <link>https://mrgossett.com/post/golangrc/</link>
+      <link>http://mrgossett.com/post/golangrc/</link>
       <pubDate>Wed, 25 Mar 2015 14:05:03 -0400</pubDate>
       
-      <guid>https://mrgossett.com/post/golangrc/</guid>
+      <guid>http://mrgossett.com/post/golangrc/</guid>
       <description>TL;DR I wrote some bash functions that are a regular part of my workflow. Check them out Go source I have Go&amp;rsquo;s source cloned in ~/goroot. Since the source is now managed with git, I can switch between versions very easily, and I can browse the source for Go&amp;rsquo;s standard library using my editor. To clone the source, I did this: git clone https://go.googlesource.com/go ~/goroot Since this constitutes &amp;ldquo;installing [Go] to a custom location&amp;rdquo;, Go will need a few environment variables set: export GOROOT=$HOME/goroot export GOPATH=$HOME/go export GOBIN=$GOROOT/bin export PATH=$GOBIN:$PATH Helper functions I wrote a few helper functions which are basically aliases for commands I execute often.</description>
     </item>
     
     <item>
       <title>Collaborative Apps with Go at Citrix</title>
-      <link>https://mrgossett.com/post/collaborative-apps-go-citrix/</link>
+      <link>http://mrgossett.com/post/collaborative-apps-go-citrix/</link>
       <pubDate>Tue, 17 Mar 2015 08:59:18 -0400</pubDate>
       
-      <guid>https://mrgossett.com/post/collaborative-apps-go-citrix/</guid>
+      <guid>http://mrgossett.com/post/collaborative-apps-go-citrix/</guid>
       <description>Reposted from the Firebase blog Collaborative Apps with Go at Citrix Tim Gossett and his colleague Steven Berlanga are Backend Developers for the Realtime Platform Group at Citrix. They build services to enable collaborative web and mobile apps. Our team is developing realtime communications technology, and we’re using Firebase for low-latency data sync. Our platform provides a rally point for mobile and web clients to connect and start collaborating. Part of that collaboration happens in Firebase.</description>
     </item>
     
     <item>
       <title>route 53</title>
-      <link>https://mrgossett.com/post/route-53/</link>
+      <link>http://mrgossett.com/post/route-53/</link>
       <pubDate>Tue, 17 Mar 2015 07:26:35 -0400</pubDate>
       
-      <guid>https://mrgossett.com/post/route-53/</guid>
+      <guid>http://mrgossett.com/post/route-53/</guid>
       <description>At work, we created an internal API for vending sub-domains of a particular, somewhat popular domain we own. The project is written in Go and wraps the AWS Route 53 API to manage DNS records. We decided to use github.com/mitchellh/goamz, which is has pretty well-rounded implementations of most of the AWS APIs. When using goamz/route53, things were working perfectly when aws.GetAuth was passed credentials directly&amp;ndash;i.e., the things I normally set as AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY.</description>
     </item>
     
     <item>
       <title>awsenv</title>
-      <link>https://mrgossett.com/post/awsenv/</link>
+      <link>http://mrgossett.com/post/awsenv/</link>
       <pubDate>Sun, 08 Mar 2015 21:06:46 -0400</pubDate>
       
-      <guid>https://mrgossett.com/post/awsenv/</guid>
+      <guid>http://mrgossett.com/post/awsenv/</guid>
       <description>TL;DR I have this cool awsenv function. Check it out Full disclosure: the awsenv function in this post is based on a zsh script my co-worker phemmer wrote. I ported it to bash. Why? I deal with a few different AWS accounts in the course of a day. We use separate accounts at work for our development and production deploys, and I also have a personal account to kick around. AWS has a nice suite of command-line utilities, but there&amp;rsquo;s one aspect that I don&amp;rsquo;t agree with: credential management.</description>
     </item>
     
     <item>
       <title>aws tab complete</title>
-      <link>https://mrgossett.com/post/aws-tab-complete/</link>
+      <link>http://mrgossett.com/post/aws-tab-complete/</link>
       <pubDate>Sat, 07 Mar 2015 21:06:46 -0400</pubDate>
       
-      <guid>https://mrgossett.com/post/aws-tab-complete/</guid>
+      <guid>http://mrgossett.com/post/aws-tab-complete/</guid>
       <description>I would go insane if I did&amp;rsquo;t wire-up tab completion for the aws CLI. There are just too many commands to remember. To do that, I dropped this line in my .awsrc: complete -C aws_completer aws So now when I type aws &amp;lt;tab&amp;gt;, I get a list of possible commands, like this: ~ $ aws &amp;lt;tab&amp;gt; autoscaling ec2 rds cloudformation ecs redshift cloudhsm elasticache route53 cloudsearch elasticbeanstalk route53domains cloudsearchdomain elastictranscoder</description>
     </item>
     
     <item>
       <title>~/.dockerrc</title>
-      <link>https://mrgossett.com/post/dockerrc/</link>
+      <link>http://mrgossett.com/post/dockerrc/</link>
       <pubDate>Fri, 20 Feb 2015 21:06:46 -0400</pubDate>
       
-      <guid>https://mrgossett.com/post/dockerrc/</guid>
+      <guid>http://mrgossett.com/post/dockerrc/</guid>
       <description>We use Docker at work as part of our deployment strategy. Since we ship dockerized apps, Docker is part of our development environment. I develop in OS X, so I use Boot2Docker. One of the original core contributors to Docker, @creack, was part of our team for a while. It was a great opportunity to get familiar with Docker as a technology. He helped me put together a ~/.dockerrc file that ensures my development environment is always ready to go.</description>
     </item>
     
