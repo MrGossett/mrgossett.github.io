@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Tags - MrGossett</title>
+  <title>eb config --&gt; deploy - MrGossett</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="">
   <meta name="author" content="">
   <meta name="keywords" content="">
-  <link rel="canonical" href="http://mrgossett.com/tags/">
+  <link rel="canonical" href="http://mrgossett.com/post/eb-config-deploy/">
 
   
   
@@ -49,29 +49,41 @@
 
   <div class="post p2 p-responsive wrap" role="main">
     <div class="measure">
+      <div class="post-header mb2">
+        <h1 class="py2">eb config --&gt; deploy</h1>
+        <span class="post-meta">Nov 9, 2015 by Tim Gossett</span><br>
+        
+      </div>
 
-  <div>
-   
-   
-   <h3 id="title">Tags</h3>
-   
-    
-    <a href="http://mrgossett.com//tags/rc"> rc </a> 6 <br>
-    
-    <a href="http://mrgossett.com//tags/bash"> bash </a> 6 <br>
-    
-    <a href="http://mrgossett.com//tags/go"> go </a> 5 <br>
-    
-    <a href="http://mrgossett.com//tags/aws"> aws </a> 4 <br>
-    
-    <a href="http://mrgossett.com//tags/git"> git </a> 1 <br>
-    
-    <a href="http://mrgossett.com//tags/firebase"> firebase </a> 1 <br>
-    
-    <a href="http://mrgossett.com//tags/docker"> docker </a> 1 <br>
-    
-    
-  </div>
+      <article class="post-content">
+      <p>I learned something useful the other day. We use AWS ElasticBeanstalk (let&rsquo;s just call it EB) at work for deploying the various components of our SOA. I use <a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb-cli3.html">the <code>eb</code> CLI tool</a> a lot when working with those EB apps.</p>
+
+<p>EB stores the configuration data it needs for each app as a YAML file in S3. One of the commands the <code>eb</code> CLI provides is <a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb3-config.html"><code>eb config</code></a>, which allows management of those YAML files from the command line:</p>
+
+<ul>
+<li><code>eb config list</code> to list the saved configurations in S3</li>
+<li><code>eb config save</code> to download a YAML file that describes the current configuration of the app</li>
+<li><code>eb config put</code> to upload a YAML file from local disk to S3</li>
+<li>etc.</li>
+</ul>
+
+<p>What I didn&rsquo;t know was that just <code>eb config</code> will pull down the app&rsquo;s current configuration and send it to a buffer in the current <code>EDITOR</code>. If any changes are saved in that buffer, then <code>eb</code> will deploy the changed configuration to the running EB app.</p>
+
+<p>This means that updating, e.g., a security group is as simple as <code>eb config</code>, make the change, then save to deploy.</p>
+
+      </article>
+
+      <p class="post-meta">Tags:&nbsp;
+        
+            
+            <a href="http://mrgossett.com//tags/AWS">AWS</a>
+        
+            ,&nbsp;
+            <a href="http://mrgossett.com//tags/bash">bash</a>
+        
+      </p>
+
+      
 
     </div>
   </div>
