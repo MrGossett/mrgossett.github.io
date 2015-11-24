@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>docker inspect | grep - MrGossett</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <meta name="keywords" content="">
+  <link rel="canonical" href="http://mrgossett.com/post/docker-inspect-grep/">
+
+  
+  
+  <link rel="stylesheet" type="text/css" href="http://mrgossett.com/css/basscss.css">
+  <link rel="stylesheet" type="text/css" href="http://mrgossett.com/css/main.css">
+
+  
+  
+  <link rel="stylesheet" type="text/css" href="http://mrgossett.com/css/highlight/styles/xcode.css">
+
+  
+  
+  <link rel='stylesheet' type='text/css' href='//fonts.googleapis.com/css?family=Ubuntu:400,700,400italic,700italic&subset=latin,cyrillic-ext,cyrillic'>
+  <link rel='stylesheet' type='text/css' href='//fonts.googleapis.com/css?family=Lato:900,300'>
+
+  
+
+</head>
+<body class="">
+
+<div class="site-wrap">
+  <header class="site-header px2 px-responsive">
+  <div class="mt2 wrap">
+    <div class="measure">
+      <a href="http://mrgossett.com/" class="site-title">
+      	MrGossett
+      	
+      </a>
+      <nav class="site-nav right">
+      <a href="http://mrgossett.com/tags">Tags</a>
+
+
+      </nav>
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</header>
+
+  <div class="post p2 p-responsive wrap" role="main">
+    <div class="measure">
+      <div class="post-header mb2">
+        <h1 class="py2">docker inspect | grep</h1>
+        <span class="post-meta">Oct 19, 2015 by Tim Gossett</span><br>
+        
+      </div>
+
+      <article class="post-content">
+      <p>We&rsquo;ve dockerized all of the apps the comprise our platform at work. Almost all of the configuration data that our apps need is provided via environment variables. Sometimes I need to verify that the correct configuration was provided for a particular environment variable.</p>
+
+<p>I&rsquo;ve executed the following command enough times now that I figured I should write it down somewhere.</p>
+
+<pre><code class="language-bash"># $cid is the target container's ID, and $var is some part of the environment variable's name
+docker inspect -f '{{range $_, $e := .Config.Environment}}{{println $e}}{{end}}' $cid | grep $var
+</code></pre>
+
+<p>This executes <a href="https://docs.docker.com/engine/reference/commandline/inspect/"><code>docker inspect</code></a> with a Go template that will loop through the container&rsquo;s environment variables (which are stored as a flat array of strings like <code>[&quot;VAR1=value1&quot;, &quot;VAR2=value2&quot;]</code>) and print each variable on a new line. That output is piped to <code>grep</code> which searches for the environment variable I&rsquo;m after.</p>
+
+<p>To spice it up a bit: if there&rsquo;s only one container running, then there&rsquo;s no need to know its CID.</p>
+
+<pre><code class="language-bash">docker ps -q | xargs docker inspect -f '{{range $_, $e := .Config.Environment}}{{println $e}}{{end}}' | grep $var
+</code></pre>
+
+<p><a href="https://docs.docker.com/engine/reference/commandline/ps/"><code>docker ps -q</code></a> will list just the CIDs of the running containers. Pipe this to <code>xargs</code> followed by the <code>docker inspect</code> command above, and the CID of the one running container will effectively be added as the last argument to the command.</p>
+
+      </article>
+
+      <p class="post-meta">Tags:&nbsp;
+        
+            
+            <a href="http://mrgossett.com//tags/docker">docker</a>
+        
+            ,&nbsp;
+            <a href="http://mrgossett.com//tags/bash">bash</a>
+        
+      </p>
+
+      
+
+    </div>
+  </div>
+</div>
+    <footer class="footer">
+      <div class="p2 wrap">
+        <div class="measure mt1 center">
+      <nav class="social-icons icons">
+<a class="fa fa-rss rss" href="http://mrgossett.com/index.xml"></a>
+
+<a class="fa fa-twitter twitter" href="https://twitter.com/MrGossett"></a>
+
+</nav>
+
+          <small>
+            Copyright &#169; 2015<br>
+            Powered by <a href="http://gohugo.io/" target="_blank">Hugo</a> &amp; <a href="https://github.com/azmelanar/hugo-theme-pixyll" target="_blank">Pixyll</a>
+          </small>
+        </div>
+      </div>
+    </footer>
+
+    
+    <script src="http://mrgossett.com/js/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    
+    
+
+
+</body>
+</html>
+

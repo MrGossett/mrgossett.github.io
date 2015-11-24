@@ -7,7 +7,16 @@
     <language>en-us</language>
     
     
-    <updated>Fri, 20 Feb 2015 21:06:46 -0400</updated>
+    <updated>Mon, 19 Oct 2015 21:09:16 -0400</updated>
+    
+    <item>
+      <title>docker inspect | grep</title>
+      <link>http://mrgossett.com/post/docker-inspect-grep/</link>
+      <pubDate>Mon, 19 Oct 2015 21:09:16 -0400</pubDate>
+      
+      <guid>http://mrgossett.com/post/docker-inspect-grep/</guid>
+      <description>We&amp;rsquo;ve dockerized all of the apps the comprise our platform at work. Almost all of the configuration data that our apps need is provided via environment variables. Sometimes I need to verify that the correct configuration was provided for a particular environment variable. I&amp;rsquo;ve executed the following command enough times now that I figured I should write it down somewhere. # $cid is the target container&#39;s ID, and $var is some part of the environment variable&#39;s name docker inspect -f &#39;{{range $_, $e := .Config.Environment}}{{println $e}}{{end}}&#39; $cid | grep $var This executes docker inspect with a Go template that will loop through the container&amp;rsquo;s environment variables (which are stored as a flat array of strings like [&amp;quot;VAR1=value1&amp;quot;, &amp;quot;VAR2=value2&amp;quot;]) and print each variable on a new line.</description>
+    </item>
     
     <item>
       <title>~/.dockerrc</title>

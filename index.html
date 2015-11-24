@@ -76,6 +76,26 @@
 
                         
                             <div class="post">
+  <a class="post-link" href="http://mrgossett.com/post/docker-inspect-grep/">
+  <p class="post-meta left">Oct 19, 2015</p>
+  <p class="post-author right">Written by Tim Gossett</p>
+  <div class="clearfix"></div>
+  <h3 class="h2 post-title">docker inspect | grep </h3>
+  <p class="post-summary">We&rsquo;ve dockerized all of the apps the comprise our platform at work. Almost all of the configuration data that our apps need is provided via environment variables. Sometimes I need to verify that the correct configuration was provided for a particular environment variable. I&rsquo;ve executed the following command enough times now that I figured I should write it down somewhere. # $cid is the target container's ID, and $var is some part of the environment variable's name docker inspect -f '{{range $_, $e := .Config.Environment}}{{println $e}}{{end}}' $cid | grep $var This executes docker inspect with a Go template that will loop through the container&rsquo;s environment variables (which are stored as a flat array of strings like [&quot;VAR1=value1&quot;, &quot;VAR2=value2&quot;]) and print each variable on a new line.</p>
+  </a>
+  
+  <p class="post-meta">Tags:&nbsp;
+  
+      
+      <a href="http://mrgossett.com//tags/docker">docker</a>
+  
+      ,&nbsp;
+      <a href="http://mrgossett.com//tags/bash">bash</a>
+  </p>
+</div>
+
+                        
+                            <div class="post">
   <a class="post-link" href="http://mrgossett.com/post/inverted-switch/">
   <p class="post-meta left">Aug 9, 2015</p>
   <p class="post-author right">Written by Tim Gossett</p>
@@ -244,29 +264,6 @@
 </div>
 
                         
-                            <div class="post">
-  <a class="post-link" href="http://mrgossett.com/post/dockerrc/">
-  <p class="post-meta left">Feb 20, 2015</p>
-  <p class="post-author right">Written by Tim Gossett</p>
-  <div class="clearfix"></div>
-  <h3 class="h2 post-title">~/.dockerrc </h3>
-  <p class="post-summary">We use Docker at work as part of our deployment strategy. Since we ship dockerized apps, Docker is part of our development environment. I develop in OS X, so I use Boot2Docker. One of the original core contributors to Docker, @creack, was part of our team for a while. It was a great opportunity to get familiar with Docker as a technology. He helped me put together a ~/.dockerrc file that ensures my development environment is always ready to go.</p>
-  </a>
-  
-  <p class="post-meta">Tags:&nbsp;
-  
-      
-      <a href="http://mrgossett.com//tags/rc">rc</a>
-  
-      ,&nbsp;
-      <a href="http://mrgossett.com//tags/bash">bash</a>
-  
-      ,&nbsp;
-      <a href="http://mrgossett.com//tags/docker">docker</a>
-  </p>
-</div>
-
-                        
                 </div>
             </div>
             <div class="paginatin_area">
@@ -278,7 +275,7 @@
   </div>
   <div class="right">
   
-  <span class="pagination-item disabled">Older</span>
+  <a class="pagination-item" href="http://mrgossett.com/page/2/">Older</a>
   
   </div>
 </div>
