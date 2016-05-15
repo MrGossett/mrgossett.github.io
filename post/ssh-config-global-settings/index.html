@@ -60,7 +60,7 @@
 
 <p><em>This is part of a series explaining the SSH config I&rsquo;m using on my machine (OS X 10.11). The config should be portable to most UNIX-based systems; Windows users are on their own.</em></p>
 
-<p>======</p>
+<hr />
 
 <h2 id="quick-primer:4f381694d3c231c417a07c747b1a6bf2">Quick Primer</h2>
 
@@ -136,7 +136,7 @@ net.inet.tcp.keepinit: 75000
 
 <p>Compresses data before putting it on the wire. Network communication is <a href="http://chimera.labs.oreilly.com/books/1230000000545/ch02.html#_tuning_application_behavior">faster when there are less bytes to send</a>. For latent or long-distance connections, the time spent compressing data will usually be less than the time it would take to transmit extra bytes; fast or local connections won&rsquo;t benefit from compression. Since I typically connect to remote machines, having compression on by default is helpful.</p>
 
-<p>===</p>
+<hr />
 
 <p>This is part of a series explaining the SSH config I&rsquo;m using on my machine. The full series will be:</p>
 
