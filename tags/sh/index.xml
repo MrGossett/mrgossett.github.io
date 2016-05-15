@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+      <title>Sh on MrGossett </title>
+      <generator uri="https://gohugo.io">Hugo</generator>
+    <link>http://mrgossett.com/tags/sh/</link>
+    <language>en-us</language>
+    
+    
+    <updated>Sat, 14 May 2016 20:12:53 -0500</updated>
+    
+    <item>
+      <title>~/.ssh/config - Global Settings</title>
+      <link>http://mrgossett.com/post/ssh-config-global-settings/</link>
+      <pubDate>Sat, 14 May 2016 20:12:53 -0500</pubDate>
+      
+      <guid>http://mrgossett.com/post/ssh-config-global-settings/</guid>
+      <description>This is part of a series explaining the SSH config I&amp;rsquo;m using on my machine (OS X 10.11). The config should be portable to most UNIX-based systems; Windows users are on their own. ====== Quick Primer Every time the SSH client is invoked, it looks for settings in ~/.ssh/config (as well as some other places). The same is true for utilities that use SSH as a transport such as scp and sftp.</description>
+    </item>
+    
+  </channel>
+</rss>
+

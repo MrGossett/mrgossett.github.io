@@ -56,6 +56,26 @@
                         
                         
                             <div class="post">
+  <a class="post-link" href="http://mrgossett.com/post/ssh-config-global-settings/">
+  <p class="post-meta left">May 14, 2016</p>
+  <p class="post-author right">Written by Tim Gossett</p>
+  <div class="clearfix"></div>
+  <h3 class="h2 post-title">~/.ssh/config - Global Settings </h3>
+  <p class="post-summary">This is part of a series explaining the SSH config I&rsquo;m using on my machine (OS X 10.11). The config should be portable to most UNIX-based systems; Windows users are on their own. ====== Quick Primer Every time the SSH client is invoked, it looks for settings in ~/.ssh/config (as well as some other places). The same is true for utilities that use SSH as a transport such as scp and sftp.</p>
+  </a>
+  
+  <p class="post-meta">Tags:&nbsp;
+  
+      
+      <a href="http://mrgossett.com//tags/sh">sh</a>
+  
+      ,&nbsp;
+      <a href="http://mrgossett.com//tags/rc">rc</a>
+  </p>
+</div>
+
+                        
+                            <div class="post">
   <a class="post-link" href="http://mrgossett.com/post/eb-config-deploy/">
   <p class="post-meta left">Nov 9, 2015</p>
   <p class="post-author right">Written by Tim Gossett</p>
@@ -225,29 +245,6 @@
   <div class="clearfix"></div>
   <h3 class="h2 post-title">awsenv </h3>
   <p class="post-summary">TL;DR I have this cool awsenv function. Check it out Full disclosure: the awsenv function in this post is based on a zsh script my co-worker phemmer wrote. I ported it to bash. Why? I deal with a few different AWS accounts in the course of a day. We use separate accounts at work for our development and production deploys, and I also have a personal account to kick around. AWS has a nice suite of command-line utilities, but there&rsquo;s one aspect that I don&rsquo;t agree with: credential management.</p>
-  </a>
-  
-  <p class="post-meta">Tags:&nbsp;
-  
-      
-      <a href="http://mrgossett.com//tags/rc">rc</a>
-  
-      ,&nbsp;
-      <a href="http://mrgossett.com//tags/AWS">AWS</a>
-  
-      ,&nbsp;
-      <a href="http://mrgossett.com//tags/bash">bash</a>
-  </p>
-</div>
-
-                        
-                            <div class="post">
-  <a class="post-link" href="http://mrgossett.com/post/aws-tab-complete/">
-  <p class="post-meta left">Mar 7, 2015</p>
-  <p class="post-author right">Written by Tim Gossett</p>
-  <div class="clearfix"></div>
-  <h3 class="h2 post-title">aws tab complete </h3>
-  <p class="post-summary">I would go insane if I did&rsquo;t wire-up tab completion for the aws CLI. There are just too many commands to remember. To do that, I dropped this line in my .awsrc: complete -C aws_completer aws So now when I type aws &lt;tab&gt;, I get a list of possible commands, like this: ~ $ aws &lt;tab&gt; autoscaling ec2 rds cloudformation ecs redshift cloudhsm elasticache route53 cloudsearch elasticbeanstalk route53domains cloudsearchdomain elastictranscoder</p>
   </a>
   
   <p class="post-meta">Tags:&nbsp;
