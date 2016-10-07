@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>~/.ssh/config - GitHub - MrGossett</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <meta name="keywords" content="">
+  <link rel="canonical" href="http://mrgossett.com/post/ssh-config-github/">
+
+  
+  
+  <link rel="stylesheet" type="text/css" href="http://mrgossett.com/css/basscss.css">
+  <link rel="stylesheet" type="text/css" href="http://mrgossett.com/css/main.css">
+
+  
+  
+  <link rel="stylesheet" type="text/css" href="http://mrgossett.com/css/highlight/styles/xcode.css">
+
+  
+  
+  <link rel='stylesheet' type='text/css' href='//fonts.googleapis.com/css?family=Ubuntu:400,700,400italic,700italic&subset=latin,cyrillic-ext,cyrillic'>
+  <link rel='stylesheet' type='text/css' href='//fonts.googleapis.com/css?family=Lato:900,300'>
+
+  
+
+</head>
+<body class="">
+
+<div class="site-wrap">
+  <header class="site-header px2 px-responsive">
+  <div class="mt2 wrap">
+    <div class="measure">
+      <a href="http://mrgossett.com/" class="site-title">
+      	MrGossett
+      	
+      </a>
+      <nav class="site-nav right">
+      <a href="http://mrgossett.com/tags">Tags</a>
+
+
+      </nav>
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</header>
+
+  <div class="post p2 p-responsive wrap" role="main">
+    <div class="measure">
+      <div class="post-header mb2">
+        <h1 class="py2">~/.ssh/config - GitHub</h1>
+        <span class="post-meta">Jun 4, 2016 by Tim Gossett</span><br>
+        
+      </div>
+
+      <article class="post-content">
+      
+
+<p><em>This is part of a series explaining the SSH config I&rsquo;m using on my machine (OS X 10.11). The config should be portable to most UNIX-based systems; Windows users are on their own.</em></p>
+
+<hr />
+
+<p>A majority of the SSH traffic produced by a developer is to and from GitHub. My SSH config adds a little tuning specific to <code>github.com</code>.</p>
+
+<h2 id="host-github-com:2e5ca56e0757efef52b49ad10f7cf586"><code>Host github.com</code></h2>
+
+<p><code>Host github.com</code> applies to any SSH traffic (including <code>git</code> over SSH) routed to the <code>github.com</code> hostname. Here&rsquo;s the full stanza:</p>
+
+<pre><code>Host github.com
+  User git
+  ControlPersist 570
+  ForwardAgent no
+  IdentitiesOnly yes
+  IdentityFile ~/.ssh/github
+</code></pre>
+
+<h3 id="user-git:2e5ca56e0757efef52b49ad10f7cf586"><code>User git</code></h3>
+
+<p>GitHub&rsquo;s SSH URLs all use the <code>git</code> user (<code>git@github.com:...</code>). I mirrored that in my config for good form, though in practice it probably doesn&rsquo;t need to be there.</p>
+
+<h3 id="controlpersist-570:2e5ca56e0757efef52b49ad10f7cf586"><code>ControlPersist 570</code></h3>
+
+<p>My global config uses a 4-hour idle timeout, but GitHub will hang up after 10 minutes. This adjusts the idle timeout to 9.5 minutes. The idea is to leave a connection to GitHub open so that it can be reused, but to close it before it gets closed on GitHub&rsquo;s end due to inactivity.</p>
+
+<p>When the remote side closes a connection, the SSH client&rsquo;s default behavior is to print a message on STDERR saying something like &ldquo;<code>connection closed by github.com</code>&rdquo;. Random and unexpected messages on STDERR can get annoying.</p>
+
+<h3 id="forwardagent-no:2e5ca56e0757efef52b49ad10f7cf586"><code>ForwardAgent no</code></h3>
+
+<p>I use a dedicated keypair for GitHub from each machine. There&rsquo;s no need to bring my entire keychain along since I&rsquo;ll never need to use any other key in the chain from GitHub&rsquo;s remote host.</p>
+
+<h3 id="identitiesonly-yes:2e5ca56e0757efef52b49ad10f7cf586"><code>IdentitiesOnly yes</code></h3>
+
+<p>Only use the identity file I specify in config, and don&rsquo;t use the keychain at all.</p>
+
+<h3 id="identityfile-ssh-github:2e5ca56e0757efef52b49ad10f7cf586"><code>IdentityFile ~/.ssh/github</code></h3>
+
+<p>This specifies the private key to use when connecting to GitHub. Specifying it here means I don&rsquo;t need to have it in my keychain.</p>
+
+<hr />
+
+<p>This is part of a series explaining the SSH config I&rsquo;m using on my machine. The full series will be:</p>
+
+<ol>
+<li><a href="http://mrgossett.com/post/ssh-config-global-settings/">General Settings</a></li>
+<li>GitHub</li>
+<li>Stomping Grounds</li>
+<li>Development Host</li>
+<li>Jump Host</li>
+</ol>
+
+      </article>
+
+      <p class="post-meta">Tags:&nbsp;
+        
+            
+            <a href="http://mrgossett.com//tags/sh">sh</a>
+        
+            ,&nbsp;
+            <a href="http://mrgossett.com//tags/rc">rc</a>
+        
+      </p>
+
+      
+
+    </div>
+  </div>
+</div>
+    <footer class="footer">
+      <div class="p2 wrap">
+        <div class="measure mt1 center">
+      <nav class="social-icons icons">
+<a class="fa fa-rss rss" href="http://mrgossett.com/index.xml"></a>
+
+<a class="fa fa-twitter twitter" href="https://twitter.com/MrGossett"></a>
+
+</nav>
+
+          <small>
+            Copyright &#169; 2015<br>
+            Powered by <a href="http://gohugo.io/" target="_blank">Hugo</a> &amp; <a href="https://github.com/azmelanar/hugo-theme-pixyll" target="_blank">Pixyll</a>
+          </small>
+        </div>
+      </div>
+    </footer>
+
+    
+    <script src="http://mrgossett.com/js/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    
+    
+
+
+</body>
+</html>
+

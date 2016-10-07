@@ -7,7 +7,16 @@
     <language>en-us</language>
     
     
-    <updated>Sat, 14 May 2016 20:12:53 -0500</updated>
+    <updated>Sat, 04 Jun 2016 22:14:47 -0500</updated>
+    
+    <item>
+      <title>~/.ssh/config - GitHub</title>
+      <link>http://mrgossett.com/post/ssh-config-github/</link>
+      <pubDate>Sat, 04 Jun 2016 22:14:47 -0500</pubDate>
+      
+      <guid>http://mrgossett.com/post/ssh-config-github/</guid>
+      <description>This is part of a series explaining the SSH config I&amp;rsquo;m using on my machine (OS X 10.11). The config should be portable to most UNIX-based systems; Windows users are on their own. A majority of the SSH traffic produced by a developer is to and from GitHub. My SSH config adds a little tuning specific to github.com. Host github.com Host github.com applies to any SSH traffic (including git over SSH) routed to the github.com hostname.</description>
+    </item>
     
     <item>
       <title>~/.ssh/config - Global Settings</title>
