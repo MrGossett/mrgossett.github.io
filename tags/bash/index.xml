@@ -21,7 +21,7 @@
     <item>
       <title>docker inspect | grep</title>
       <link>http://mrgossett.com/post/docker-inspect-grep/</link>
-      <pubDate>Mon, 19 Oct 2015 21:09:16 -0400</pubDate>
+      <pubDate>Mon, 19 Oct 2015 21:09:16 EDT</pubDate>
       
       <guid>http://mrgossett.com/post/docker-inspect-grep/</guid>
       <description>We&amp;rsquo;ve dockerized all of the apps the comprise our platform at work. Almost all of the configuration data that our apps need is provided via environment variables. Sometimes I need to verify that the correct configuration was provided for a particular environment variable. I&amp;rsquo;ve executed the following command enough times now that I figured I should write it down somewhere. # $cid is the target container&#39;s ID, and $var is some part of the environment variable&#39;s name docker inspect -f &#39;{{range $_, $e := .Config.Environment}}{{println $e}}{{end}}&#39; $cid | grep $var This executes docker inspect with a Go template that will loop through the container&amp;rsquo;s environment variables (which are stored as a flat array of strings like [&amp;quot;VAR1=value1&amp;quot;, &amp;quot;VAR2=value2&amp;quot;]) and print each variable on a new line.</description>
@@ -30,7 +30,7 @@
     <item>
       <title>~/.gitconfig aliases</title>
       <link>http://mrgossett.com/post/gitconfig/</link>
-      <pubDate>Thu, 14 May 2015 14:28:56 -0400</pubDate>
+      <pubDate>Thu, 14 May 2015 14:28:56 EDT</pubDate>
       
       <guid>http://mrgossett.com/post/gitconfig/</guid>
       <description>I use git from the command line as part of my regular workflow. Configuring aliases saves just a few keystrokes, but those keystrokes add up (My bash history says I&amp;rsquo;ve executed git commands 121 times in my current shell session, which has spanned about two workdays). I have git itself aliased to g in my ~/.bashrc. git allows aliasing subcommands in the [alias] section of ~/.gitconfig. Below are my aliases in workflow order: Fetch &amp;amp; Checkout To kick it off, I typically git fetch from remote to make sure git is aware of the branches that exist on the remote end.</description>
@@ -39,7 +39,7 @@
     <item>
       <title>~/.golangrc</title>
       <link>http://mrgossett.com/post/golangrc/</link>
-      <pubDate>Wed, 25 Mar 2015 14:05:03 -0400</pubDate>
+      <pubDate>Wed, 25 Mar 2015 14:05:03 EDT</pubDate>
       
       <guid>http://mrgossett.com/post/golangrc/</guid>
       <description>TL;DR I wrote some bash functions that are a regular part of my workflow. Check them out Go source I have Go&amp;rsquo;s source cloned in ~/goroot. Since the source is now managed with git, I can switch between versions very easily, and I can browse the source for Go&amp;rsquo;s standard library using my editor. To clone the source, I did this: git clone https://go.googlesource.com/go ~/goroot Since this constitutes &amp;ldquo;installing [Go] to a custom location&amp;rdquo;, Go will need a few environment variables set: export GOROOT=$HOME/goroot export GOPATH=$HOME/go export GOBIN=$GOROOT/bin export PATH=$GOBIN:$PATH Helper functions I wrote a few helper functions which are basically aliases for commands I execute often.</description>
@@ -48,7 +48,7 @@
     <item>
       <title>awsenv</title>
       <link>http://mrgossett.com/post/awsenv/</link>
-      <pubDate>Sun, 08 Mar 2015 21:06:46 -0400</pubDate>
+      <pubDate>Sun, 08 Mar 2015 21:06:46 EDT</pubDate>
       
       <guid>http://mrgossett.com/post/awsenv/</guid>
       <description>TL;DR I have this cool awsenv function. Check it out Full disclosure: the awsenv function in this post is based on a zsh script my co-worker phemmer wrote. I ported it to bash. Why? I deal with a few different AWS accounts in the course of a day. We use separate accounts at work for our development and production deploys, and I also have a personal account to kick around. AWS has a nice suite of command-line utilities, but there&amp;rsquo;s one aspect that I don&amp;rsquo;t agree with: credential management.</description>

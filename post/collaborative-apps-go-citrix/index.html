@@ -60,7 +60,7 @@
 
 <p><strong>Reposted from <a href="https://www.firebase.com/blog/2015-03-17-collaborative-go-apps-at-citrix.html">the Firebase blog</a></strong></p>
 
-<h2 id="collaborative-apps-with-go-at-citrix:b503e9cd600fce92183fcecbe2bc2b65">Collaborative Apps with Go at Citrix</h2>
+<h2 id="collaborative-apps-with-go-at-citrix">Collaborative Apps with Go at Citrix</h2>
 
 <p><em><a href="https://github.com/MrGossett">Tim Gossett</a> and his colleague <a href="https://github.com/zabawaba99">Steven Berlanga</a> are Backend Developers for the Realtime Platform Group at Citrix. They build services to enable collaborative web and mobile apps.</em></p>
 
@@ -70,7 +70,7 @@
 
 <p>We write in <a href="https://golang.org/">Go</a>, so we looked for a Go package to handle our interaction with Firebase. As soon as we were tasked to look into integrating Firebase, we quickly checked the Firebase documentation to see if there were any open source Go REST API implementations. Because there were no existing open source projects that utilized Firebase’s REST streaming protocol,  we decided to write our own. We ended up with three libraries.</p>
 
-<h3 id="firego:b503e9cd600fce92183fcecbe2bc2b65">Firego</h3>
+<h3 id="firego">Firego</h3>
 
 <p><a href="https://github.com/CloudCom/firego">Firego</a> wraps the Firebase REST and Streaming APIs. Our goal was to have a comparable interface as Firebase’s iOS and Android SDKs, while still following Go conventions. Example code explains it best:</p>
 
@@ -98,7 +98,7 @@ e := &lt;-notifications
 fmt.Println(&quot;type=%s path=%s data=%v&quot;, e.Type, e.Path, e.Data)
 </code></pre>
 
-<h3 id="fireauth:b503e9cd600fce92183fcecbe2bc2b65">Fireauth</h3>
+<h3 id="fireauth">Fireauth</h3>
 
 <p>To generate secure JWTs for Firebase’s <a href="https://www.firebase.com/docs/web/guide/login/custom.html">Custom Login</a> we built <a href="https://github.com/CloudCom/fireauth">Fireauth</a>. Using this library, you can pack arbitrary data into a token and use that data to tailor access to Firebase using <a href="https://www.firebase.com/docs/security/guide/securing-data.html">security rules</a>.</p>
 
@@ -116,7 +116,7 @@ if err != nil {
 println(“token:”, token)
 </code></pre>
 
-<h3 id="fireload:b503e9cd600fce92183fcecbe2bc2b65">Fireload</h3>
+<h3 id="fireload">Fireload</h3>
 
 <p><a href="https://github.com/CloudCom/fireload">Fireload</a> ties together a pool of Firebase namespaces and acts as a load balancer among them. Since we’re building in the Cloud, we aim to be horizontally scalable so that we can ramp up to handle “web-scale” traffic in very little time. While Firebase can handle rather heavy load, we want to avoid any single point of failure.</p>
 
@@ -144,7 +144,7 @@ namespace := pool.Next()
 f := firego.New(namespace.Domain)
 </code></pre>
 
-<h3 id="we-d-like-your-feedback:b503e9cd600fce92183fcecbe2bc2b65">We’d like your feedback!</h3>
+<h3 id="we-d-like-your-feedback">We’d like your feedback!</h3>
 
 <p>The open-source repos are at <a href="https://github.com/CloudCom">github.com/CloudCom</a>. We would welcome feature requests, bug reports, pull requests and other feedback from the Firebase and Golang communities.</p>
 

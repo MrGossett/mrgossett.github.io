@@ -21,7 +21,7 @@
     <item>
       <title>route 53</title>
       <link>http://mrgossett.com/post/route-53/</link>
-      <pubDate>Tue, 17 Mar 2015 07:26:35 -0400</pubDate>
+      <pubDate>Tue, 17 Mar 2015 07:26:35 EDT</pubDate>
       
       <guid>http://mrgossett.com/post/route-53/</guid>
       <description>At work, we created an internal API for vending sub-domains of a particular, somewhat popular domain we own. The project is written in Go and wraps the AWS Route 53 API to manage DNS records. We decided to use github.com/mitchellh/goamz, which is has pretty well-rounded implementations of most of the AWS APIs. When using goamz/route53, things were working perfectly when aws.GetAuth was passed credentials directly&amp;ndash;i.e., the things I normally set as AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY.</description>
@@ -30,7 +30,7 @@
     <item>
       <title>awsenv</title>
       <link>http://mrgossett.com/post/awsenv/</link>
-      <pubDate>Sun, 08 Mar 2015 21:06:46 -0400</pubDate>
+      <pubDate>Sun, 08 Mar 2015 21:06:46 EDT</pubDate>
       
       <guid>http://mrgossett.com/post/awsenv/</guid>
       <description>TL;DR I have this cool awsenv function. Check it out Full disclosure: the awsenv function in this post is based on a zsh script my co-worker phemmer wrote. I ported it to bash. Why? I deal with a few different AWS accounts in the course of a day. We use separate accounts at work for our development and production deploys, and I also have a personal account to kick around. AWS has a nice suite of command-line utilities, but there&amp;rsquo;s one aspect that I don&amp;rsquo;t agree with: credential management.</description>

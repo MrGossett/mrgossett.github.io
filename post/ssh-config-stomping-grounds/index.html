@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>~/.ssh/config - Stomping Grounds - MrGossett</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <meta name="keywords" content="">
+  <link rel="canonical" href="http://mrgossett.com/post/ssh-config-stomping-grounds/">
+
+  
+  
+  <link rel="stylesheet" type="text/css" href="http://mrgossett.com/css/basscss.css">
+  <link rel="stylesheet" type="text/css" href="http://mrgossett.com/css/main.css">
+
+  
+  
+  <link rel="stylesheet" type="text/css" href="http://mrgossett.com/css/highlight/styles/xcode.css">
+
+  
+  
+  <link rel='stylesheet' type='text/css' href='//fonts.googleapis.com/css?family=Ubuntu:400,700,400italic,700italic&subset=latin,cyrillic-ext,cyrillic'>
+  <link rel='stylesheet' type='text/css' href='//fonts.googleapis.com/css?family=Lato:900,300'>
+
+  
+
+</head>
+<body class="">
+
+<div class="site-wrap">
+  <header class="site-header px2 px-responsive">
+  <div class="mt2 wrap">
+    <div class="measure">
+      <a href="http://mrgossett.com/" class="site-title">
+      	MrGossett
+      	
+      </a>
+      <nav class="site-nav right">
+      <a href="http://mrgossett.com/tags">Tags</a>
+
+
+      </nav>
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</header>
+
+  <div class="post p2 p-responsive wrap" role="main">
+    <div class="measure">
+      <div class="post-header mb2">
+        <h1 class="py2">~/.ssh/config - Stomping Grounds</h1>
+        <span class="post-meta">Jun 11, 2016 by Tim Gossett</span><br>
+        
+      </div>
+
+      <article class="post-content">
+      
+
+<p><em>This is part of a series explaining the SSH config I&rsquo;m using on my machine (OS X 10.11). The config should be portable to most UNIX-based systems; Windows users are on their own.</em></p>
+
+<hr />
+
+<p>A majority of the SSH traffic produced by an operator is to and from running VMs. My SSH config makes it easier to quickly and securely connect to VMs.</p>
+
+<h2 id="host-jump"><code>Host jump*</code></h2>
+
+<p><code>Host jump*</code> applies to any hostname that starts with &ldquo;jump&rdquo;. Here&rsquo;s the full stanza:</p>
+
+<pre><code>Host jump*
+  IdentityFile ~/.ssh/jump
+  User ec2-user
+  HostName %h.mrgossett.com
+</code></pre>
+
+<h3 id="user-ec2-user"><code>User ec2-user</code></h3>
+
+<p>I don&rsquo;t have a dedicated user for these hosts, so I use the default <code>ec2-user</code>. Specifying <code>User</code> here means I don&rsquo;t have to type it as part of the <code>ssh</code> command.</p>
+
+<h3 id="identityfile-ssh-jump"><code>IdentityFile ~/.ssh/jump</code></h3>
+
+<p>Use the SSH key that I generated specifically for use with jump boxes. The public key for this pair would have been added to the <code>~/.ssh/authorized_keys</code> file on the target host. Specifying it here means that it&rsquo;s sure to be used, even if it&rsquo;s not part of my keychain.</p>
+
+<h3 id="hostname-h-mrgossett-com"><code>HostName %h.mrgossett.com</code></h3>
+
+<p>This saves some typing by expanding the hostname I provided at the command line using this format string. If I type <code>jump1</code> as the hostname, SSH will expand it to <code>jump1.mrgossett.com</code>.</p>
+
+<hr />
+
+<h1 id="what-s-a-jump-host">What&rsquo;s a jump host?</h1>
+
+<p>It&rsquo;s generally not good security practice to allow direct SSH access from the public internet to every host in an environment. A &ldquo;jump host&rdquo; (a.k.a., &ldquo;bounce box&rdquo; or &ldquo;jump box&rdquo;) acts as a proxy. The protected hosts will allow SSH traffic coming from a known set of jump hosts (usually one or two). The jump hosts allow SSH traffic from the public internet and are (should be) secured as much as possible. This way, the protected hosts only need to worry about trusting one or two jump hosts, and the jump hosts only need to be worried about authenticating SSH traffic on a single port.</p>
+
+<h2 id="jump-host-example-config">Jump Host example config</h2>
+
+<p>Below is an example config stanza for working with a jump host:</p>
+
+<pre><code>Host target-host
+  ProxyCommand ssh -q jump-user@jump-host nc %h %p
+  Compression no
+</code></pre>
+
+<h3 id="proxycommand-ssh-q-jump-user-jump-host-nc-h-p"><code>ProxyCommand ssh -q jump-user@jump-host nc %h %p</code></h3>
+
+<p>SSH usually connects directly to a host and starts talking SSH protocol. The <code>ProxyCommand</code> instead will handle the connecting part. SSH executes <code>ProxyCommand</code> and pipes in its SSH protocol via <code>STDIN</code>. <code>ProxyCommand</code> then is responsible for shipping that data off to an SSH daemon somewhere, and returning response data to <code>STDOUT</code>. Note that <code>%h</code> and <code>%p</code> will be expanded to the target hostname and port, respectively.</p>
+
+<p>Here, <code>ProxyCommand</code> first is establishing an SSH connection to <code>jump-host</code> (<code>ssh -q jump-user@jump-host</code>). The <code>-q</code> flag puts that first SSH session in quiet mode so that warnings and diagnostic messages are suppressed. Once the connection to the jump host is established, we need to make the next hop to the target machine.</p>
+
+<p>The next part of <code>ProxyCommand</code> points <code>STDIN</code> at the target hostname and port using <code>netcat</code> (a.k.a <code>nc</code>), a standard UNIX utility for reading from and writing to network connections. <code>STDOUT</code> is also routed back for the return trip from the target host to the client&rsquo;s machine, fulfilling the requirement for <code>ProxyCommand</code> to return response data on <code>STDOUT</code>.</p>
+
+<h3 id="compression-no"><code>Compression no</code></h3>
+
+<p>My global settings turn on compression for any SSH connection. In this scenario, we&rsquo;re connecting to the jump host before we connect to the target host, so the connection to the jump host will be compressed. Leaving compression on for the target host would result in double-compressed data. The connection from the jump host to the target host should be reasonably fast since they&rsquo;re likely on the same LAN, or otherwise in the same data center, so compressing traffic between them won&rsquo;t really speed things up that much. This directive turns off compression for the target host, avoiding double compression.</p>
+
+<h2 id="another-revision">Another Revision</h2>
+
+<p>The following two stanzas have the same effect as the Jump Host example config above, but a bit cleaner.</p>
+
+<pre><code>Host target-host
+  ProxyCommand ssh -q jump-host nc %h %p
+  Compression no
+
+Host jump-host
+  User jump-user
+  HostName 127.0.53.53
+</code></pre>
+
+<p>The settings for <code>Host jump-host</code> are applied as usual in the <code>ProxyCommand</code> for <code>Host target-host</code>.</p>
+
+<h3 id="user-jump-user"><code>User jump-user</code></h3>
+
+<p>Whenever I connect to this jump host, I want to do so as a user named <code>jump-user</code>.</p>
+
+<h3 id="hostname-127-0-0-53"><code>HostName 127.0.0.53</code></h3>
+
+<p>This is using <code>HostName</code> to create an alias so that SSH knows <code>jump-host</code> is really IP <code>127.0.53.53</code> (just an example).</p>
+
+<hr />
+
+<p>This is part of a series explaining the SSH config I&rsquo;m using on my machine. The full series will be:</p>
+
+<ol>
+<li><a href="http://mrgossett.com/post/ssh-config-global-settings/">General Settings</a></li>
+<li><a href="http://mrgossett.com/post/ssh-config-github/">GitHub</a></li>
+<li>Stomping Grounds</li>
+<li>Development Host</li>
+<li>Jump Host</li>
+</ol>
+
+      </article>
+
+      <p class="post-meta">Tags:&nbsp;
+        
+            
+            <a href="http://mrgossett.com//tags/sh">sh</a>
+        
+            ,&nbsp;
+            <a href="http://mrgossett.com//tags/rc">rc</a>
+        
+      </p>
+
+      
+
+    </div>
+  </div>
+</div>
+    <footer class="footer">
+      <div class="p2 wrap">
+        <div class="measure mt1 center">
+      <nav class="social-icons icons">
+<a class="fa fa-rss rss" href="http://mrgossett.com/index.xml"></a>
+
+<a class="fa fa-twitter twitter" href="https://twitter.com/MrGossett"></a>
+
+</nav>
+
+          <small>
+            Copyright &#169; 2015<br>
+            Powered by <a href="http://gohugo.io/" target="_blank">Hugo</a> &amp; <a href="https://github.com/azmelanar/hugo-theme-pixyll" target="_blank">Pixyll</a>
+          </small>
+        </div>
+      </div>
+    </footer>
+
+    
+    <script src="http://mrgossett.com/js/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    
+    
+
+
+</body>
+</html>
+

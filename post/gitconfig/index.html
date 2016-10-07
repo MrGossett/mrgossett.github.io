@@ -62,7 +62,7 @@
 
 <p>I have <code>git</code> itself aliased to <code>g</code> in my <code>~/.bashrc</code>. <code>git</code> allows aliasing subcommands in the <code>[alias]</code> section of <code>~/.gitconfig</code>. Below are my aliases in workflow order:</p>
 
-<h2 id="fetch-checkout:bbc5fa23bc227b3911b7322b3bf8cc85">Fetch &amp; Checkout</h2>
+<h2 id="fetch-checkout">Fetch &amp; Checkout</h2>
 
 <p>To kick it off, I typically <code>git fetch</code> from remote to make sure <code>git</code> is aware of the branches that exist on the remote end. Then I <code>git checkout</code> the branch that I want to work on, whether the branch already exists on the remote end or I create it locally. Those two commands look like <code>g f</code> and <code>g co</code> with the following aliases:</p>
 
@@ -70,7 +70,7 @@
 co = checkout
 </code></pre>
 
-<h2 id="status-diff:bbc5fa23bc227b3911b7322b3bf8cc85">Status &amp; Diff</h2>
+<h2 id="status-diff">Status &amp; Diff</h2>
 
 <p>To see what&rsquo;s changed, I use <code>git status</code> and <code>git diff</code> often.</p>
 
@@ -83,7 +83,7 @@ d = diff
 ds = diff --staged
 </code></pre>
 
-<h2 id="add:bbc5fa23bc227b3911b7322b3bf8cc85">Add</h2>
+<h2 id="add">Add</h2>
 
 <p>I typically stage changes wholesale instead of adding file-by-file; that&rsquo;s the behavior of <code>git add --all</code>, which I aliased as <code>g a</code>. Sometimes, though, it&rsquo;s better to add only some of the parts of a file that have changed and not others. That&rsquo;s possible with <code>git add --patch</code>, aliased as <code>g ap</code>.</p>
 
@@ -91,7 +91,7 @@ ds = diff --staged
 ap = add --patch
 </code></pre>
 
-<h2 id="commit:bbc5fa23bc227b3911b7322b3bf8cc85">Commit</h2>
+<h2 id="commit">Commit</h2>
 
 <p>Once I&rsquo;ve staged everything I want to include in a changeset, it&rsquo;s time to <code>git commit</code>. My first alias, <code>g c</code>, expands to <code>git commit -v</code>. The behavior of the <code>-v</code> flag is described in <code>git</code>&rsquo;s manpage like this:</p>
 
@@ -106,7 +106,7 @@ ap = add --patch
 ca = commit --amend
 </code></pre>
 
-<h2 id="trim:bbc5fa23bc227b3911b7322b3bf8cc85">Trim</h2>
+<h2 id="trim">Trim</h2>
 
 <p>Over the course of a few weeks (or a couple of intense days), I may end up with a few dozen feature branches in one repo, most of which have been merged into <code>master</code>. To clean up the branches that have been merged, I use the following alias, which executes a shell command:</p>
 
@@ -115,7 +115,7 @@ ca = commit --amend
 
 <p>This lists all of the branches that have been merged, drops <code>master</code>, <code>production</code>, and the current branch from that list, and then passes the final list to <code>git branch -d</code> to delete them.</p>
 
-<h2 id="all-together:bbc5fa23bc227b3911b7322b3bf8cc85">All Together</h2>
+<h2 id="all-together">All Together</h2>
 
 <p>Here&rsquo;s the whole thing:</p>
 

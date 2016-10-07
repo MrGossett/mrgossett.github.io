@@ -58,19 +58,19 @@
       <article class="post-content">
       
 
-<h2 id="tl-dr:aa84e39f58c872cf409a237a95d5e6fd">TL;DR</h2>
+<h2 id="tl-dr">TL;DR</h2>
 
 <p>I have this cool <code>awsenv</code> function. <a href="#tldr">Check it out</a></p>
 
 <p><em>Full disclosure: the <code>awsenv</code> function in this post is based on a <code>zsh</code> script my co-worker <a href="https://github.com/phemmer">phemmer</a> wrote. I ported it to <code>bash</code>.</em></p>
 
-<h2 id="why:aa84e39f58c872cf409a237a95d5e6fd">Why?</h2>
+<h2 id="why">Why?</h2>
 
 <p>I deal with a few different AWS accounts in the course of a day. We use separate accounts at work for our development and production deploys, and I also have a personal account to kick around.</p>
 
 <p>AWS has a nice suite of command-line utilities, but there&rsquo;s one aspect that I don&rsquo;t agree with: credential management. Suffice it to say that it&rsquo;s not easy to switch between AWS accounts using the provided CLIs. Fortunately, the AWS CLIs can make use of credentials set as environment variables, and environment variables can be swapped rather easily.</p>
 
-<h2 id="the-credentials:aa84e39f58c872cf409a237a95d5e6fd">The Credentials</h2>
+<h2 id="the-credentials">The Credentials</h2>
 
 <p>The end goal is a function (we&rsquo;ll call it <code>awsenv</code>) that will set a number of environment variables associated with my label for the AWS account I was to use, and drop me in a subshell.</p>
 
@@ -100,7 +100,7 @@ regions[prod]='us-west-1'
 
 <p>So now <code>keypairs</code> and <code>regions</code> are ready to go.</p>
 
-<h2 id="usage:aa84e39f58c872cf409a237a95d5e6fd">Usage</h2>
+<h2 id="usage">Usage</h2>
 
 <p>It&rsquo;s not uncommon for me to temporarily forget how to use something I wrote. It&rsquo;s good practice to respond to unexpected or invalid input with some usage tips, just to help the user out. Let&rsquo;s handle that first.</p>
 
@@ -132,7 +132,7 @@ Environments:
   prod
 </code></pre>
 
-<h2 id="creating-an-environment:aa84e39f58c872cf409a237a95d5e6fd">Creating an Environment</h2>
+<h2 id="creating-an-environment">Creating an Environment</h2>
 
 <p>Now to the meaty part. The user has given us a valid account label, so we need to fetch the values for that label and set environment variables accordingly.</p>
 
@@ -180,7 +180,7 @@ chmod 0600 &quot;$AWS_CREDENTIAL_FILE&quot; || return 1
 fi
 </code></pre>
 
-<h2 id="the-subshell:aa84e39f58c872cf409a237a95d5e6fd">The Subshell</h2>
+<h2 id="the-subshell">The Subshell</h2>
 
 <p>Now that we have an environment configured for the correct AWS account, we need to drop the user in a subshell to run some commands with that account.</p>
 
@@ -194,7 +194,7 @@ fi
 <pre><code class="language-bash">shift
 </code></pre>
 
-<h4 id="now-for-a-neat-trick:aa84e39f58c872cf409a237a95d5e6fd">Now for a neat trick.</h4>
+<h4 id="now-for-a-neat-trick">Now for a neat trick.</h4>
 
 <p>A majority of my use of <code>ssh</code> is in the form <code>ssh &lt;host&gt;</code>, where I want to start a secure shell session on the remote host. Once the session is established, <code>ssh</code> drops me in a shell on the other end.</p>
 
@@ -213,7 +213,7 @@ fi
 
 <p>Lastly, to make all this happen in a subshell, we need to wrap parens around everything from <code>creds=(${keypairs[$1]})</code> to the <code>fi</code> after <code>exec &quot;$SHELL&quot;</code>.</p>
 
-<h2 id="put-it-all-together:aa84e39f58c872cf409a237a95d5e6fd">Put it all together</h2>
+<h2 id="put-it-all-together">Put it all together</h2>
 
 <p><a name="tldr"></a>Here&rsquo;s the complete function in all its glory:</p>
 

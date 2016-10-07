@@ -7,12 +7,12 @@
     <language>en-us</language>
     
     
-    <updated>Thu, 14 May 2015 14:28:56 -0400</updated>
+    <updated>Thu, 14 May 2015 14:28:56 EDT</updated>
     
     <item>
       <title>~/.gitconfig aliases</title>
       <link>http://mrgossett.com/post/gitconfig/</link>
-      <pubDate>Thu, 14 May 2015 14:28:56 -0400</pubDate>
+      <pubDate>Thu, 14 May 2015 14:28:56 EDT</pubDate>
       
       <guid>http://mrgossett.com/post/gitconfig/</guid>
       <description>I use git from the command line as part of my regular workflow. Configuring aliases saves just a few keystrokes, but those keystrokes add up (My bash history says I&amp;rsquo;ve executed git commands 121 times in my current shell session, which has spanned about two workdays). I have git itself aliased to g in my ~/.bashrc. git allows aliasing subcommands in the [alias] section of ~/.gitconfig. Below are my aliases in workflow order: Fetch &amp;amp; Checkout To kick it off, I typically git fetch from remote to make sure git is aware of the branches that exist on the remote end.</description>

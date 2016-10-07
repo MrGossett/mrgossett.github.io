@@ -7,7 +7,16 @@
     <language>en-us</language>
     
     
-    <updated>Sat, 04 Jun 2016 22:14:47 -0500</updated>
+    <updated>Sat, 11 Jun 2016 18:04:08 -0500</updated>
+    
+    <item>
+      <title>~/.ssh/config - Stomping Grounds</title>
+      <link>http://mrgossett.com/post/ssh-config-stomping-grounds/</link>
+      <pubDate>Sat, 11 Jun 2016 18:04:08 -0500</pubDate>
+      
+      <guid>http://mrgossett.com/post/ssh-config-stomping-grounds/</guid>
+      <description>This is part of a series explaining the SSH config I&amp;rsquo;m using on my machine (OS X 10.11). The config should be portable to most UNIX-based systems; Windows users are on their own. A majority of the SSH traffic produced by an operator is to and from running VMs. My SSH config makes it easier to quickly and securely connect to VMs. Host jump* Host jump* applies to any hostname that starts with &amp;ldquo;jump&amp;rdquo;.</description>
+    </item>
     
     <item>
       <title>~/.ssh/config - GitHub</title>
@@ -30,7 +39,7 @@
     <item>
       <title>~/.gitconfig aliases</title>
       <link>http://mrgossett.com/post/gitconfig/</link>
-      <pubDate>Thu, 14 May 2015 14:28:56 -0400</pubDate>
+      <pubDate>Thu, 14 May 2015 14:28:56 EDT</pubDate>
       
       <guid>http://mrgossett.com/post/gitconfig/</guid>
       <description>I use git from the command line as part of my regular workflow. Configuring aliases saves just a few keystrokes, but those keystrokes add up (My bash history says I&amp;rsquo;ve executed git commands 121 times in my current shell session, which has spanned about two workdays). I have git itself aliased to g in my ~/.bashrc. git allows aliasing subcommands in the [alias] section of ~/.gitconfig. Below are my aliases in workflow order: Fetch &amp;amp; Checkout To kick it off, I typically git fetch from remote to make sure git is aware of the branches that exist on the remote end.</description>
@@ -39,7 +48,7 @@
     <item>
       <title>~/.golangrc</title>
       <link>http://mrgossett.com/post/golangrc/</link>
-      <pubDate>Wed, 25 Mar 2015 14:05:03 -0400</pubDate>
+      <pubDate>Wed, 25 Mar 2015 14:05:03 EDT</pubDate>
       
       <guid>http://mrgossett.com/post/golangrc/</guid>
       <description>TL;DR I wrote some bash functions that are a regular part of my workflow. Check them out Go source I have Go&amp;rsquo;s source cloned in ~/goroot. Since the source is now managed with git, I can switch between versions very easily, and I can browse the source for Go&amp;rsquo;s standard library using my editor. To clone the source, I did this: git clone https://go.googlesource.com/go ~/goroot Since this constitutes &amp;ldquo;installing [Go] to a custom location&amp;rdquo;, Go will need a few environment variables set: export GOROOT=$HOME/goroot export GOPATH=$HOME/go export GOBIN=$GOROOT/bin export PATH=$GOBIN:$PATH Helper functions I wrote a few helper functions which are basically aliases for commands I execute often.</description>
@@ -48,7 +57,7 @@
     <item>
       <title>route 53</title>
       <link>http://mrgossett.com/post/route-53/</link>
-      <pubDate>Tue, 17 Mar 2015 07:26:35 -0400</pubDate>
+      <pubDate>Tue, 17 Mar 2015 07:26:35 EDT</pubDate>
       
       <guid>http://mrgossett.com/post/route-53/</guid>
       <description>At work, we created an internal API for vending sub-domains of a particular, somewhat popular domain we own. The project is written in Go and wraps the AWS Route 53 API to manage DNS records. We decided to use github.com/mitchellh/goamz, which is has pretty well-rounded implementations of most of the AWS APIs. When using goamz/route53, things were working perfectly when aws.GetAuth was passed credentials directly&amp;ndash;i.e., the things I normally set as AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY.</description>
@@ -57,7 +66,7 @@
     <item>
       <title>awsenv</title>
       <link>http://mrgossett.com/post/awsenv/</link>
-      <pubDate>Sun, 08 Mar 2015 21:06:46 -0400</pubDate>
+      <pubDate>Sun, 08 Mar 2015 21:06:46 EDT</pubDate>
       
       <guid>http://mrgossett.com/post/awsenv/</guid>
       <description>TL;DR I have this cool awsenv function. Check it out Full disclosure: the awsenv function in this post is based on a zsh script my co-worker phemmer wrote. I ported it to bash. Why? I deal with a few different AWS accounts in the course of a day. We use separate accounts at work for our development and production deploys, and I also have a personal account to kick around. AWS has a nice suite of command-line utilities, but there&amp;rsquo;s one aspect that I don&amp;rsquo;t agree with: credential management.</description>

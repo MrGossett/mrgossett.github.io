@@ -60,7 +60,7 @@
 
 <p>Go is great for building APIs. It&rsquo;s common for APIs to perform some validation on the data structures used in request bodies.</p>
 
-<h3 id="some-structure:5cc9f219b49937eaa21ea719d97ba525">some structure</h3>
+<h3 id="some-structure">some structure</h3>
 
 <p>Assume we&rsquo;re handling a request with the following body:</p>
 
@@ -83,7 +83,7 @@
 
 <p><code>package json</code> will do the heavy lifting to parse the date and convert the JSON numeric into an <code>int64</code>. If the client had supplied something other than an ISO8601 date string for <code>some_date</code>, <code>package json</code> would squawk. The same goes for values in <code>thing_id</code> that cannot be converted to an <code>int64</code>.</p>
 
-<h3 id="validate-me:5cc9f219b49937eaa21ea719d97ba525">validate me</h3>
+<h3 id="validate-me">validate me</h3>
 
 <p>Now let&rsquo;s validate that the client supplied data for each attribute in the struct.</p>
 
@@ -112,7 +112,7 @@
 
 <p>This naïve approach gets the job done, but we can do better. <a href="https://github.com/fzipp/gocyclo">gocyclo</a> calculates the cyclomatic complexity of the func above at 5.</p>
 
-<h3 id="inverted-switch:5cc9f219b49937eaa21ea719d97ba525">inverted switch</h3>
+<h3 id="inverted-switch">inverted switch</h3>
 
 <p>The first two conditionals are testing for the same condition in two different attributes. In my view, the most elegant way to detect if one thing matches one of a few other things is with a <code>switch</code>. I&rsquo;m accustomed to using a variable as the control expression and using hard-coded literals or constants as the cases; but we can invert that pattern:</p>
 

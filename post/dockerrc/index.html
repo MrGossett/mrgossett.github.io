@@ -84,7 +84,7 @@ function drop-containers() {
 
 <p>I&rsquo;ll break down each section.</p>
 
-<h2 id="auto-start:f727fc559b2d44d79895adf6ac1747c9">Auto-start</h2>
+<h2 id="auto-start">Auto-start</h2>
 
 <p>If <code>boot2docker</code> is not running for some reason, I want to start it.</p>
 
@@ -95,7 +95,7 @@ fi
 
 <p>I&rsquo;m not really interested in the output of <code>boot2docker start</code>, since this happens every time I open a new shell; so I pipe its <code>STDOUT</code> to <code>/dev/null</code>.</p>
 
-<h2 id="environment-variables:f727fc559b2d44d79895adf6ac1747c9">Environment Variables</h2>
+<h2 id="environment-variables">Environment Variables</h2>
 
 <p>The <code>docker</code> client relies on a few environment variables being set so that it knows where the docker daemon is running, and how to talk to it. At the moment, those variables are <code>DOCKER_HOST</code>, <code>DOCKER_TLS_VERIFY</code>, and <code>DOCKER_CERT_PATH</code>. <code>boot2docker</code> provides a handy <code>shellinit</code> command that spits out some contextual information on <code>STDERR</code>, and <code>export</code> commands for the environment variables it needs on <code>STDOUT</code>. Here&rsquo;s what it looks like in my shell:</p>
 
@@ -119,7 +119,7 @@ Writing /Users/tim/.boot2docker/certs/boot2docker-vm/key.pem
 fi
 </code></pre>
 
-<h2 id="prune-dangling-images:f727fc559b2d44d79895adf6ac1747c9">Prune Dangling Images</h2>
+<h2 id="prune-dangling-images">Prune Dangling Images</h2>
 
 <p>After running <code>docker build</code> a number of times for the same project (making changes along the way), I tend to end up with a number of &ldquo;dangling&rdquo;—that is, untagged—Docker images. A majority of those images started <code>FROM google/golang:1.4</code>, and contain plenty of code vendored in <code>Godeps</code>&hellip; so they take up a lot of space. I wrote a function that just wraps a command to drop all of those dangling images.</p>
 
@@ -130,7 +130,7 @@ fi
 
 <p><code>docker images</code> lists all of the images on my machine, in a human-friendly table layout. The <code>-q</code> flag (for &ldquo;quiet&rdquo;) prints just the IDs of the images. <code>--filter 'dangling=true'</code> filters the list to show only the untagged images. I pipe that list to <code>docker rmi</code>, which deletes them.</p>
 
-<h2 id="drop-all-the-containers:f727fc559b2d44d79895adf6ac1747c9">Drop ALL THE CONTAINERS!</h2>
+<h2 id="drop-all-the-containers">Drop ALL THE CONTAINERS!</h2>
 
 <p>I&rsquo;ve gotten better about cleaning up containers after they&rsquo;ve stopped, but I still let a few fall through the cracks. I wrote a wrapper function that forcefully deletes all of the containers on my machine—even the running ones.</p>
 

@@ -60,7 +60,7 @@
 
 <p>We&rsquo;ve begun to use <code>github.com/gorilla/mux</code> at work as a router for many of our services. I ran into a snag when writing some unit tests, and learned a bit about the design of <code>mux</code> in the process.</p>
 
-<h3 id="a-quick-detour:96a1b81de0da9a6b7fcdff1480ceade0">A quick detour</h3>
+<h3 id="a-quick-detour">A quick detour</h3>
 
 <p>When I say &ldquo;unit tests&rdquo;, I mean this:</p>
 
@@ -71,7 +71,7 @@
 
 <p>More directly, I mean calling a single function with inputs formed specifically to test the behavior of that function. When I &ldquo;unit test&rdquo; handler funcs, I call the handler directly; I don&rsquo;t want to involve other parts of the system (like a <code>mux.Router</code>).</p>
 
-<h3 id="the-mux-vars-problem:96a1b81de0da9a6b7fcdff1480ceade0">The <code>mux.Vars</code> problem</h3>
+<h3 id="the-mux-vars-problem">The <code>mux.Vars</code> problem</h3>
 
 <p><code>github.com/gorilla/mux</code> is a Golang HTTP router. Among other features, it provides a nice way to extract parameters from a request&rsquo;s path, using <code>mux.Vars</code> which is a <code>map[string]string</code>. However, the way it works makes it impossible to unit test handlers (in a pure sense).</p>
 

@@ -64,7 +64,7 @@
 
 <p>A majority of the SSH traffic produced by a developer is to and from GitHub. My SSH config adds a little tuning specific to <code>github.com</code>.</p>
 
-<h2 id="host-github-com:2e5ca56e0757efef52b49ad10f7cf586"><code>Host github.com</code></h2>
+<h2 id="host-github-com"><code>Host github.com</code></h2>
 
 <p><code>Host github.com</code> applies to any SSH traffic (including <code>git</code> over SSH) routed to the <code>github.com</code> hostname. Here&rsquo;s the full stanza:</p>
 
@@ -76,25 +76,25 @@
   IdentityFile ~/.ssh/github
 </code></pre>
 
-<h3 id="user-git:2e5ca56e0757efef52b49ad10f7cf586"><code>User git</code></h3>
+<h3 id="user-git"><code>User git</code></h3>
 
 <p>GitHub&rsquo;s SSH URLs all use the <code>git</code> user (<code>git@github.com:...</code>). I mirrored that in my config for good form, though in practice it probably doesn&rsquo;t need to be there.</p>
 
-<h3 id="controlpersist-570:2e5ca56e0757efef52b49ad10f7cf586"><code>ControlPersist 570</code></h3>
+<h3 id="controlpersist-570"><code>ControlPersist 570</code></h3>
 
 <p>My global config uses a 4-hour idle timeout, but GitHub will hang up after 10 minutes. This adjusts the idle timeout to 9.5 minutes. The idea is to leave a connection to GitHub open so that it can be reused, but to close it before it gets closed on GitHub&rsquo;s end due to inactivity.</p>
 
 <p>When the remote side closes a connection, the SSH client&rsquo;s default behavior is to print a message on STDERR saying something like &ldquo;<code>connection closed by github.com</code>&rdquo;. Random and unexpected messages on STDERR can get annoying.</p>
 
-<h3 id="forwardagent-no:2e5ca56e0757efef52b49ad10f7cf586"><code>ForwardAgent no</code></h3>
+<h3 id="forwardagent-no"><code>ForwardAgent no</code></h3>
 
 <p>I use a dedicated keypair for GitHub from each machine. There&rsquo;s no need to bring my entire keychain along since I&rsquo;ll never need to use any other key in the chain from GitHub&rsquo;s remote host.</p>
 
-<h3 id="identitiesonly-yes:2e5ca56e0757efef52b49ad10f7cf586"><code>IdentitiesOnly yes</code></h3>
+<h3 id="identitiesonly-yes"><code>IdentitiesOnly yes</code></h3>
 
 <p>Only use the identity file I specify in config, and don&rsquo;t use the keychain at all.</p>
 
-<h3 id="identityfile-ssh-github:2e5ca56e0757efef52b49ad10f7cf586"><code>IdentityFile ~/.ssh/github</code></h3>
+<h3 id="identityfile-ssh-github"><code>IdentityFile ~/.ssh/github</code></h3>
 
 <p>This specifies the private key to use when connecting to GitHub. Specifying it here means I don&rsquo;t need to have it in my keychain.</p>
 
